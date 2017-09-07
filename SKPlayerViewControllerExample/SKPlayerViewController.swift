@@ -210,11 +210,6 @@ class SKPlayerViewController: UIViewController {
         }
         
         self.playPlayer() // Start playback
-        
-        // Top layout guide
-        
-//        let topGuide = self.topLayoutGuide
-//        self.view.addConstraints(NSLayoutConstraint .constraints(withVisualFormat: "V:[topGuide]-0-[topView]", options: NSLayoutFormatOptions(rawValue: 0), metrics: nil, views: ["topGuide" : topGuide, "topView" : self.topBarContainer!]))
     }
     
     override func viewWillLayoutSubviews() {

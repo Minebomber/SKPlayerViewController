@@ -67,10 +67,8 @@ class SKPlayerViewController: UIViewController {
         }
     }
     
-    var statusBarShouldBeHidden = false
-    
     override var prefersStatusBarHidden: Bool {
-        return statusBarShouldBeHidden
+        return isFullscreen
     }
     
     override var preferredStatusBarUpdateAnimation: UIStatusBarAnimation {
@@ -215,8 +213,8 @@ class SKPlayerViewController: UIViewController {
         
         // Top layout guide
         
-        let topGuide = self.topLayoutGuide
-        self.view.addConstraints(NSLayoutConstraint .constraints(withVisualFormat: "V:[topGuide]-0-[topView]", options: NSLayoutFormatOptions(rawValue: 0), metrics: nil, views: ["topGuide" : topGuide, "topView" : self.topBarContainer!]))
+//        let topGuide = self.topLayoutGuide
+//        self.view.addConstraints(NSLayoutConstraint .constraints(withVisualFormat: "V:[topGuide]-0-[topView]", options: NSLayoutFormatOptions(rawValue: 0), metrics: nil, views: ["topGuide" : topGuide, "topView" : self.topBarContainer!]))
     }
     
     override func viewWillLayoutSubviews() {
@@ -511,14 +509,12 @@ class SKPlayerViewController: UIViewController {
         self.view.window?.addSubview(self.view)
         self.view.frame = frame!
         
-        self.statusBarShouldBeHidden = true
+        self.isFullscreen = true
         
-        UIView.animate(withDuration: 0.25, animations: { 
+        UIView.animate(withDuration: 0.25) { 
             self.view.frame = self.view.window!.bounds
             self.view.layoutIfNeeded()
             self.setNeedsStatusBarAppearanceUpdate()
-        }) { (_) in
-            self.isFullscreen = true
         }
     }
     
@@ -528,7 +524,7 @@ class SKPlayerViewController: UIViewController {
         self.proxyView?.superview?.addSubview(self.view)
         self.view.frame = frame!
         
-        self.statusBarShouldBeHidden = false
+        self.isFullscreen = false
         
         UIView.animate(withDuration: 0.25, animations: {
             
@@ -538,7 +534,7 @@ class SKPlayerViewController: UIViewController {
             self.setNeedsStatusBarAppearanceUpdate()
         }) { (_) in
             self.proxyView?.removeFromSuperview()
-            self.isFullscreen = false
+            self.proxyView = nil
         }
     }
     

@@ -16,6 +16,12 @@ class ViewController: UIViewController {
     
     let isLive = false
     
+    var playerViewController: SKPlayerViewController!
+    
+    override var childViewControllerForStatusBarHidden: UIViewController? {
+        return playerViewController
+    }
+    
     @IBOutlet weak var playerContainer: UIView!
     
     override func viewDidLoad() {
@@ -38,22 +44,24 @@ class ViewController: UIViewController {
     func presentPlayer() {
 
         let url = URL(string: playUrlString)
-        let playerVC = SKPlayerViewController(url: url!, isLiveStream: isLive)
-        self.present(playerVC, animated: true, completion: nil)
+        playerViewController = SKPlayerViewController(url: url!, isLiveStream: isLive)
+        self.present(playerViewController, animated: true, completion: nil)
         
     }
     
     func showPlayerInView() {
 
         let url = URL(string: playUrlString)
-        let playerVC = SKPlayerViewController(url: url!, isLiveStream: isLive)
+        playerViewController = SKPlayerViewController(url: url!, isLiveStream: isLive)
         
-        self.addChildViewController(playerVC)
+        self.addChildViewController(playerViewController)
         
-        playerVC.view.frame = self.playerContainer.bounds
-        self.playerContainer.addSubview(playerVC.view)
+        playerViewController.view.frame = self.playerContainer.bounds
+        self.playerContainer.addSubview(playerViewController.view)
         //playerVC.view.bindFrameToSuperviewBounds()
     }
+    
+    
     
     /*
     // MARK: - Navigation

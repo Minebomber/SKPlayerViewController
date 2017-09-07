@@ -218,10 +218,6 @@ class SKPlayerViewController: UIViewController {
         super.viewWillLayoutSubviews()
 
         self.playerLayer.frame = self.view.bounds
-        
-        // Setup top layout guide for the top container view to not intersect storyboard
-        self.topBarContainer?.translatesAutoresizingMaskIntoConstraints = false
-        print(self.topLayoutGuide.length)
     }
     
     // MARK: - UI Initial Config Functions
@@ -526,12 +522,14 @@ class SKPlayerViewController: UIViewController {
         
         let frame = self.view.window?.convert(self.view.frame, to: self.proxyView?.superview)
         self.proxyView?.superview?.addSubview(self.view)
-        
+        self.view.frame = frame!
+        print("Converted Frame: \(frame!)")
         self.statusBarShouldBeHidden = false
         
         UIView.animate(withDuration: 0.25, animations: {
-            self.view.frame = frame!
+            
             self.view.frame = self.proxyView!.frame
+            print("Proxy Frame: \(self.proxyView!.frame)")
             self.view.layoutIfNeeded()
             self.setNeedsStatusBarAppearanceUpdate()
         }) { (_) in

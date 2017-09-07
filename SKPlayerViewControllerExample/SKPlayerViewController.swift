@@ -212,6 +212,11 @@ class SKPlayerViewController: UIViewController {
         }
         
         self.playPlayer() // Start playback
+        
+        // Top layout guide
+        
+        let topGuide = self.topLayoutGuide
+        self.view.addConstraints(NSLayoutConstraint .constraints(withVisualFormat: "V:[topGuide]-0-[topView]", options: NSLayoutFormatOptions(rawValue: 0), metrics: nil, views: ["topGuide" : topGuide, "topView" : self.topBarContainer!]))
     }
     
     override func viewWillLayoutSubviews() {
@@ -514,7 +519,6 @@ class SKPlayerViewController: UIViewController {
             self.setNeedsStatusBarAppearanceUpdate()
         }) { (_) in
             self.isFullscreen = true
-            
         }
     }
     
@@ -523,13 +527,13 @@ class SKPlayerViewController: UIViewController {
         let frame = self.view.window?.convert(self.view.frame, to: self.proxyView?.superview)
         self.proxyView?.superview?.addSubview(self.view)
         self.view.frame = frame!
-        print("Converted Frame: \(frame!)")
+        
         self.statusBarShouldBeHidden = false
         
         UIView.animate(withDuration: 0.25, animations: {
             
             self.view.frame = self.proxyView!.frame
-            print("Proxy Frame: \(self.proxyView!.frame)")
+            
             self.view.layoutIfNeeded()
             self.setNeedsStatusBarAppearanceUpdate()
         }) { (_) in

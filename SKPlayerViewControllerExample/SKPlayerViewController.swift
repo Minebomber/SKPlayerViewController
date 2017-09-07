@@ -78,6 +78,8 @@ class SKPlayerViewController: UIViewController {
     }
     
     // MARK: Interface Builder Connections
+    @IBOutlet weak var airplayContainer: UIView?
+    
     @IBOutlet weak var playPauseButton: UIButton?
     
     @IBOutlet weak var timeElapsedLabel: UILabel?
@@ -95,7 +97,6 @@ class SKPlayerViewController: UIViewController {
     
     @IBOutlet weak var hlsLabel: UILabel?
     
-    @IBOutlet weak var airplayButton: UIButton?
     @IBOutlet weak var chromecastButton: UIButton?
     
     @IBOutlet weak var playerOverlayView: SKPlayerOverlayView?
@@ -161,8 +162,6 @@ class SKPlayerViewController: UIViewController {
         let playerItem = AVPlayerItem(url: self.playUrl)
         self.player.replaceCurrentItem(with: playerItem)
         
-        self.player.allowsExternalPlayback = true
-        
         // Setup KVO for buffering
         self.player.addObserver(self, forKeyPath: kPlaybackLikelyToKeepUp, options: .new, context: nil)
         self.player.addObserver(self, forKeyPath: kPlaybackBufferFull, options: .new, context: nil)
@@ -196,8 +195,9 @@ class SKPlayerViewController: UIViewController {
         }
         
         self.updateUIForHLS()
-        self.setImagesForAirplayButton()
         self.setImagesForChromecastButton()
+        
+        self.addExternalPlayerButtons()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -226,13 +226,6 @@ class SKPlayerViewController: UIViewController {
     
     // MARK: - UI Initial Config Functions
     
-    func setImagesForAirplayButton() {
-        let airplayBaseImage = UIImage(named: airplayImageName)
-        let airplayHighlightedImage = airplayBaseImage?.maskWith(color: airplayHighlightedColor)
-        self.airplayButton?.setImage(airplayHighlightedImage, for: .highlighted)
-        self.airplayButton?.setImage(airplayHighlightedImage, for: .selected)
-    }
-    
     func setImagesForChromecastButton() {
         let chromecastBaseImage = UIImage(named: chromecastImageName)
         let chromecastHighlightedImage = chromecastBaseImage?.maskWith(color: chromecastHighlightedColor)
@@ -254,32 +247,12 @@ class SKPlayerViewController: UIViewController {
         self.seekSlider?.addTarget(self, action: #selector(SKPlayerViewController.sliderEndedTracking), for: .touchUpOutside)
         self.seekSlider?.addTarget(self, action: #selector(SKPlayerViewController.sliderValueChanged), for: .valueChanged)
         
-        // Airplay Button (custom)
-        self.airplayButton?.addTarget(self, action: #selector(SKPlayerViewController.toggleAirplay), for: .touchUpInside)
+        // Airplay Button (custo
         
         // Chomecast Button (custom)
         self.chromecastButton?.addTarget(self, action: #selector(SKPlayerViewController.toggleChromecast), for: .touchUpInside)
         
         self.fullscreenButton?.addTarget(self, action: #selector(SKPlayerViewController.toggleFullScreen), for: .touchUpInside)
-    }
-    
-    @objc private func toggleAirplay() {
-        
-        self.airplayEnabled = !self.airplayEnabled
-        
-        let airplayBaseImage = UIImage(named: airplayImageName)
-        
-        if self.airplayEnabled {
-            
-            let airplayOnImage = airplayBaseImage?.maskWith(color: airplayOnColor)
-            self.airplayButton?.setImage(airplayOnImage, for: .normal)
-            
-        } else {
-            
-            let airplayOffImage = airplayBaseImage?.maskWith(color: airplayOffColor)
-            self.airplayButton?.setImage(airplayOffImage, for: .normal)
-            
-        }
     }
     
     @objc private func toggleChromecast() {
@@ -297,12 +270,31 @@ class SKPlayerViewController: UIViewController {
             
             let chromecastOffImage = chromecastBaseImage?.maskWith(color: chromecastOffColor)
             self.chromecastButton?.setImage(chromecastOffImage, for: .normal)
-            
         }
     }
     
     private func addExternalPlayerButtons() {
         
+        self.volumeView.showsVolumeSlider = false
+        self.volumeView.sizeToFit()
+        
+        self.volumeView.frame = self.airplayContainer!.bounds
+        
+        // Customization
+        let airplayBaseImage = UIImage(named: airplayImageName)
+        let airplayOffImage = airplayBaseImage?.maskWith(color: airplayOffColor)
+        self.volumeView.setRouteButtonImage(airplayOffImage, for: .normal)
+        
+        let airplayHighlightedImage = airplayBaseImage?.maskWith(color: airplayHighlightedColor)
+        self.volumeView.setRouteButtonImage(airplayHighlightedImage, for: .highlighted)
+        
+        let airplayOnImage = airplayBaseImage?.maskWith(color: airplayOnColor)
+        self.volumeView.setRouteButtonImage(airplayOnImage, for: .selected)
+        
+        self.airplayContainer?.addSubview(self.volumeView)
+        self.airplayContainer?.backgroundColor = UIColor.clear
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(SKPlayerViewController.wirelessRouteActiveChanged), name: .MPVolumeViewWirelessRouteActiveDidChange, object: nil)
     }
     
     @objc private func playPause() {
@@ -576,6 +568,12 @@ class SKPlayerViewController: UIViewController {
             self.fullscreenButton?.setImage(highlightedFullscreenImage, for: .selected)
             self.fullscreenButton?.setImage(highlightedFullscreenImage, for: .highlighted)
         }
+        
+    }
+    
+    @objc private func wirelessRouteActiveChanged() {
+        
+        self.airplayEnabled = self.volumeView.isWirelessRouteActive
         
     }
     

@@ -13,10 +13,9 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="SKPlayerViewController" customModule="SKPlayerViewControllerExample" customModuleProvider="target">
             <connections>
-                <outlet property="airplayButton" destination="Bag-p1-SG4" id="gFW-Iq-r4m"/>
+                <outlet property="airplayContainer" destination="CMQ-hD-7NM" id="cnX-zA-Bc8"/>
                 <outlet property="bottomBarContainer" destination="CER-At-xqw" id="fsL-uL-Blp"/>
                 <outlet property="bufferingIndicator" destination="eUG-Y6-X1Y" id="Kml-xz-LAH"/>
-                <outlet property="chromecastButton" destination="ioC-Y4-bBQ" id="5u0-8C-nGG"/>
                 <outlet property="fullscreenButton" destination="9R7-nN-QZc" id="9Cj-Vq-d5W"/>
                 <outlet property="hlsLabel" destination="3DD-eL-qeP" id="ch9-KO-w7s"/>
                 <outlet property="playPauseButton" destination="oEg-UO-0aT" id="e0H-DO-R3x"/>
@@ -62,24 +61,22 @@
                                 </constraints>
                                 <state key="normal" image="sk_fullscreen"/>
                             </button>
-                            <button opaque="NO" contentMode="scaleAspectFit" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Bag-p1-SG4">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="CMQ-hD-7NM">
                                 <rect key="frame" x="54" y="7" width="30" height="30"/>
-                                <state key="normal" image="sk_airplay"/>
-                            </button>
-                            <button opaque="NO" contentMode="scaleAspectFit" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ioC-Y4-bBQ">
-                                <rect key="frame" x="100" y="9.5" width="30" height="25"/>
-                                <state key="normal" image="sk_chromecast"/>
-                            </button>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="30" id="av5-or-oL7"/>
+                                    <constraint firstAttribute="width" constant="30" id="cHi-yU-LKe"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <constraints>
-                            <constraint firstItem="ioC-Y4-bBQ" firstAttribute="leading" secondItem="Bag-p1-SG4" secondAttribute="trailing" constant="16" id="Lg4-V0-5Lw"/>
+                            <constraint firstItem="CMQ-hD-7NM" firstAttribute="leading" secondItem="oEg-UO-0aT" secondAttribute="trailing" constant="16" id="5rb-IP-neP"/>
                             <constraint firstItem="9R7-nN-QZc" firstAttribute="centerY" secondItem="gZl-Pz-sMb" secondAttribute="centerY" id="NhF-Sa-Dvv"/>
-                            <constraint firstItem="Bag-p1-SG4" firstAttribute="leading" secondItem="oEg-UO-0aT" secondAttribute="trailing" constant="16" id="W1h-mk-Jvo"/>
-                            <constraint firstItem="ioC-Y4-bBQ" firstAttribute="centerY" secondItem="gZl-Pz-sMb" secondAttribute="centerY" id="bYf-q3-EaO"/>
                             <constraint firstAttribute="trailing" secondItem="9R7-nN-QZc" secondAttribute="trailing" constant="8" id="cLK-ka-UiA"/>
                             <constraint firstItem="oEg-UO-0aT" firstAttribute="centerY" secondItem="gZl-Pz-sMb" secondAttribute="centerY" id="eER-nr-2rg"/>
                             <constraint firstItem="oEg-UO-0aT" firstAttribute="leading" secondItem="gZl-Pz-sMb" secondAttribute="leading" constant="8" id="lxg-jS-En2"/>
-                            <constraint firstItem="Bag-p1-SG4" firstAttribute="centerY" secondItem="gZl-Pz-sMb" secondAttribute="centerY" id="o6L-Vg-Hgf"/>
+                            <constraint firstItem="CMQ-hD-7NM" firstAttribute="centerY" secondItem="gZl-Pz-sMb" secondAttribute="centerY" id="tNJ-79-Rpd"/>
                         </constraints>
                     </view>
                     <constraints>
@@ -171,13 +168,11 @@
                 <constraint firstItem="Ef7-y9-Zqf" firstAttribute="top" secondItem="ZOD-4L-puL" secondAttribute="top" placeholder="YES" id="uu9-kD-nuh"/>
                 <constraint firstItem="Ef7-y9-Zqf" firstAttribute="top" secondItem="MLn-h9-Dzz" secondAttribute="bottom" id="zUn-6a-LId"/>
             </constraints>
-            <point key="canvasLocation" x="27" y="46"/>
+            <point key="canvasLocation" x="26.5" y="45.5"/>
         </view>
     </objects>
     <resources>
         <image name="pause" width="30" height="30"/>
-        <image name="sk_airplay" width="30" height="30"/>
-        <image name="sk_chromecast" width="30" height="25"/>
         <image name="sk_fullscreen" width="30" height="30"/>
         <image name="sk_pause" width="30" height="30"/>
     </resources>

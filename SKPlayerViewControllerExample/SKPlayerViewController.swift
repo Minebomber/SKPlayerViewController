@@ -54,26 +54,30 @@ class SKPlayerViewController: UIViewController {
     private let kPlaybackBufferFull = "currentItem.playbackBufferFull"
     private let kPlayerStatus = "currentItem.status"
     
+    private let kStatusBarFrame = "statusBarFrame"
+    
     // Tap Gesture Recognizer for showing / hiding view
-    let hideTapGestureRecognizer = UITapGestureRecognizer()
+    private let hideTapGestureRecognizer = UITapGestureRecognizer()
     
     // Dismiss/Present Stuff
-    var proxyView: UIView? // View to save position of embeded self (if needed)
+    private var proxyView: UIView? // View to save position of embeded self (if needed)
     
-    var isEmbeded = false // default value
-    var isFullscreen = false { // default value
+    private var isEmbeded = false // default value
+    private var isFullscreen = false { // default value
         didSet {
             self.updateFullscreenImage()
         }
     }
     
     override var prefersStatusBarHidden: Bool {
-        return isFullscreen
+        return isFullscreen || (UIApplication.shared.statusBarOrientation == .landscapeLeft || UIApplication.shared.statusBarOrientation == .landscapeRight)
     }
     
     override var preferredStatusBarUpdateAnimation: UIStatusBarAnimation {
         return .slide
     }
+    
+    private var statusBarHeight: CGFloat = UIApplication.shared.statusBarFrame.height != 0 ? UIApplication.shared.statusBarFrame.height : 20.0
     
     // MARK: Interface Builder Connections
     @IBOutlet weak var airplayContainer: UIView?
@@ -160,11 +164,15 @@ class SKPlayerViewController: UIViewController {
         let playerItem = AVPlayerItem(url: self.playUrl)
         self.player.replaceCurrentItem(with: playerItem)
         
-        // Setup KVO for buffering
+        // Setup KVO
         self.player.addObserver(self, forKeyPath: kPlaybackLikelyToKeepUp, options: .new, context: nil)
         self.player.addObserver(self, forKeyPath: kPlaybackBufferFull, options: .new, context: nil)
         self.player.addObserver(self, forKeyPath: kPlaybackBufferEmpty, options: .new, context: nil)
         self.player.addObserver(self, forKeyPath: kPlayerStatus, options: [.new, .initial], context: nil)
+        
+        //UIApplication.shared.addObserver(self, forKeyPath: kStatusBarFrame, options: [.new, .initial], context: nil)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(SKPlayerViewController.updateLocalStatusBarFrameHeight), name: .UIApplicationDidChangeStatusBarFrame, object: nil)
         
         // Setup the time observer
         let timeInterval = CMTimeMakeWithSeconds(1.0, 10)
@@ -515,8 +523,13 @@ class SKPlayerViewController: UIViewController {
     
     private func exitFullScreenToEmbed() {
         
-        let frame = self.view.window?.convert(self.view.frame, to: self.proxyView?.superview)
+        var frame = self.view.window?.convert(self.view.frame, to: self.proxyView?.superview)
         self.proxyView?.superview?.addSubview(self.view)
+        
+        if !(UIApplication.shared.statusBarOrientation == .landscapeRight || UIApplication.shared.statusBarOrientation == .landscapeLeft) {
+            frame?.origin.y -= self.statusBarHeight
+        }
+        
         self.view.frame = frame!
         
         self.isFullscreen = false
@@ -629,6 +642,13 @@ class SKPlayerViewController: UIViewController {
         return stringTime
     }
     
+    @objc private func updateLocalStatusBarFrameHeight() {
+        let height = UIApplication.shared.statusBarFrame.height
+        if height > 0 {
+            self.statusBarHeight = height
+        }
+    }
+    
     // MARK: -
     
     // MARK: KVO
@@ -649,6 +669,8 @@ class SKPlayerViewController: UIViewController {
             } else {
                 self.showBufferingIndiciator()
             }
+        case kStatusBarFrame:
+            print(UIApplication.shared.statusBarFrame.height)
         default:
             break
         }
@@ -660,6 +682,8 @@ class SKPlayerViewController: UIViewController {
         self.player.removeObserver(self, forKeyPath: kPlaybackBufferFull)
         self.player.removeObserver(self, forKeyPath: kPlaybackBufferEmpty)
         self.player.removeObserver(self, forKeyPath: kPlayerStatus)
+        
+        UIApplication.shared.removeObserver(self, forKeyPath: kStatusBarFrame)
     }
     
     // MARK: -

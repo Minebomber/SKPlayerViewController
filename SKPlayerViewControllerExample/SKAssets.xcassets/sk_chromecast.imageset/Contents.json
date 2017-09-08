@@ -2,17 +2,17 @@
   "images" : [
     {
       "idiom" : "universal",
-      "filename" : "google-cast-logo 30.png",
+      "filename" : "google-cast-logo 30px.png",
       "scale" : "1x"
     },
     {
       "idiom" : "universal",
-      "filename" : "google-cast-logo 60.png",
+      "filename" : "google-cast-logo 60px.png",
       "scale" : "2x"
     },
     {
       "idiom" : "universal",
-      "filename" : "google-cast-logo 90.png",
+      "filename" : "google-cast-logo 90px.png",
       "scale" : "3x"
     }
   ],

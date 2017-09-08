@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0EC76286AA4561C1754061C6 /* Pods_SKPlayerViewControllerExample.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B2AA382BC6C8FB08C3604C87 /* Pods_SKPlayerViewControllerExample.framework */; };
 		4D598D2E1F5E05E0007B0DAE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4D598D2C1F5E05A7007B0DAE /* Assets.xcassets */; };
 		4D598D301F5E096E007B0DAE /* SKAssets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4D598D2F1F5E096E007B0DAE /* SKAssets.xcassets */; };
 		4D717DEB1F5C58210008143B /* SKExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D717DEA1F5C58210008143B /* SKExtensions.swift */; };
@@ -36,6 +37,9 @@
 		4DBEA8341F54D9A900C143EF /* SKPlayerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SKPlayerViewController.swift; sourceTree = "<group>"; };
 		4DBEA8361F5503C600C143EF /* SKPlayerViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SKPlayerViewController.xib; sourceTree = "<group>"; };
 		4DBEA8391F55041A00C143EF /* ViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		A400805C56EF821B148E07BA /* Pods-SKPlayerViewControllerExample.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SKPlayerViewControllerExample.release.xcconfig"; path = "Pods/Target Support Files/Pods-SKPlayerViewControllerExample/Pods-SKPlayerViewControllerExample.release.xcconfig"; sourceTree = "<group>"; };
+		B2AA382BC6C8FB08C3604C87 /* Pods_SKPlayerViewControllerExample.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SKPlayerViewControllerExample.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		DFF6817F1DC57C480ED49B87 /* Pods-SKPlayerViewControllerExample.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SKPlayerViewControllerExample.debug.xcconfig"; path = "Pods/Target Support Files/Pods-SKPlayerViewControllerExample/Pods-SKPlayerViewControllerExample.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -43,12 +47,21 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0EC76286AA4561C1754061C6 /* Pods_SKPlayerViewControllerExample.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		4C7F27AB5D0ACF77E8086B48 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				B2AA382BC6C8FB08C3604C87 /* Pods_SKPlayerViewControllerExample.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		4D717DF41F5C62AC0008143B /* Images */ = {
 			isa = PBXGroup;
 			children = (
@@ -89,6 +102,8 @@
 			children = (
 				4DBEA8211F54D95A00C143EF /* SKPlayerViewControllerExample */,
 				4DBEA8201F54D95A00C143EF /* Products */,
+				FDE511A928B7DCFA2BD584A9 /* Pods */,
+				4C7F27AB5D0ACF77E8086B48 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -125,6 +140,15 @@
 			name = SKPlayerViewController;
 			sourceTree = "<group>";
 		};
+		FDE511A928B7DCFA2BD584A9 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				DFF6817F1DC57C480ED49B87 /* Pods-SKPlayerViewControllerExample.debug.xcconfig */,
+				A400805C56EF821B148E07BA /* Pods-SKPlayerViewControllerExample.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -132,9 +156,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 4DBEA8311F54D95A00C143EF /* Build configuration list for PBXNativeTarget "SKPlayerViewControllerExample" */;
 			buildPhases = (
+				A33DB18736827BF5387326E7 /* [CP] Check Pods Manifest.lock */,
 				4DBEA81B1F54D95A00C143EF /* Sources */,
 				4DBEA81C1F54D95A00C143EF /* Frameworks */,
 				4DBEA81D1F54D95A00C143EF /* Resources */,
+				93F52FC7CC5A94137ACA80B4 /* [CP] Embed Pods Frameworks */,
+				4D396ECF624BEDE8D0F180C1 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -195,6 +222,54 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		4D396ECF624BEDE8D0F180C1 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-SKPlayerViewControllerExample/Pods-SKPlayerViewControllerExample-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		93F52FC7CC5A94137ACA80B4 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-SKPlayerViewControllerExample/Pods-SKPlayerViewControllerExample-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		A33DB18736827BF5387326E7 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		4DBEA81B1F54D95A00C143EF /* Sources */ = {
@@ -329,6 +404,7 @@
 		};
 		4DBEA8321F54D95A00C143EF /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = DFF6817F1DC57C480ED49B87 /* Pods-SKPlayerViewControllerExample.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = ZM8WSG8UA8;
@@ -342,6 +418,7 @@
 		};
 		4DBEA8331F54D95A00C143EF /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = A400805C56EF821B148E07BA /* Pods-SKPlayerViewControllerExample.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = ZM8WSG8UA8;

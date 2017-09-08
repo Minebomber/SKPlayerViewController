@@ -10,6 +10,7 @@ import UIKit
 import AVKit
 import AVFoundation
 import MediaPlayer
+import GoogleCast
 
 class SKPlayerViewController: UIViewController {
     
@@ -29,6 +30,7 @@ class SKPlayerViewController: UIViewController {
     private var playerRateBeforeSeek: Float = 0
     
     private var volumeView = MPVolumeView()
+    private var chromecastButton = GCKUICastButton()
     
     private var airplayEnabled = false {
         didSet {
@@ -81,6 +83,7 @@ class SKPlayerViewController: UIViewController {
     
     // MARK: Interface Builder Connections
     @IBOutlet weak var airplayContainer: UIView?
+    @IBOutlet weak var chromecastContainer: UIView?
     
     @IBOutlet weak var playPauseButton: UIButton?
     
@@ -98,8 +101,6 @@ class SKPlayerViewController: UIViewController {
     @IBOutlet weak var bufferingIndicator: UIActivityIndicatorView?
     
     @IBOutlet weak var hlsLabel: UILabel?
-    
-    @IBOutlet weak var chromecastButton: UIButton?
     
     @IBOutlet weak var playerOverlayView: SKPlayerOverlayView?
     
@@ -186,22 +187,13 @@ class SKPlayerViewController: UIViewController {
             
         }) as AnyObject
         
-        // Slider thumb image set
-        self.seekSlider?.setThumbImage(#imageLiteral(resourceName: "sk_seek_thumb_image"), for: .normal)
+        self.setSeekSliderThumbImage()
         
         // Set target for tap gesture recognizer
         self.hideTapGestureRecognizer.addTarget(self, action: #selector(SKPlayerViewController.toggleControlsHidden(sender:)))
         self.view.addGestureRecognizer(self.hideTapGestureRecognizer)
         
-        // Hide controls if HLS
-        if self.videoIsHLS {
-            self.seekSlider?.isHidden = true
-            self.timeElapsedLabel?.isHidden = true
-            self.timeRemainingLabel?.isHidden = true
-        }
-        
-        self.updateUIForHLS()
-        self.setImagesForChromecastButton()
+        self.updateUIForHLSIfNeeded()
         
         self.addExternalPlayerButtons()
     }
@@ -228,11 +220,8 @@ class SKPlayerViewController: UIViewController {
     
     // MARK: - UI Initial Config Functions
     
-    func setImagesForChromecastButton() {
-        let chromecastBaseImage = UIImage(named: chromecastImageName)
-        let chromecastHighlightedImage = chromecastBaseImage?.maskWith(color: chromecastHighlightedColor)
-        self.chromecastButton?.setImage(chromecastHighlightedImage, for: .highlighted)
-        self.chromecastButton?.setImage(chromecastHighlightedImage, for: .selected)
+    private func setSeekSliderThumbImage() {
+        self.seekSlider?.setThumbImage(#imageLiteral(resourceName: "sk_seek_thumb_image"), for: .normal)
     }
     
     // MARK: - Outlet Functions
@@ -249,34 +238,15 @@ class SKPlayerViewController: UIViewController {
         self.seekSlider?.addTarget(self, action: #selector(SKPlayerViewController.sliderEndedTracking), for: .touchUpOutside)
         self.seekSlider?.addTarget(self, action: #selector(SKPlayerViewController.sliderValueChanged), for: .valueChanged)
         
-        // Airplay Button (custo
-        
-        // Chomecast Button (custom)
-        self.chromecastButton?.addTarget(self, action: #selector(SKPlayerViewController.toggleChromecast), for: .touchUpInside)
-        
         self.fullscreenButton?.addTarget(self, action: #selector(SKPlayerViewController.toggleFullScreen), for: .touchUpInside)
     }
     
-    @objc private func toggleChromecast() {
-        
-        self.chromecastEnabled = !self.chromecastEnabled
-        
-        let chromecastBaseImage = UIImage(named: chromecastImageName)
-        
-        if self.chromecastEnabled {
-            
-            let chromecastOnImage = chromecastBaseImage?.maskWith(color: chromecastOnColor)
-            self.chromecastButton?.setImage(chromecastOnImage, for: .normal)
-            
-        } else {
-            
-            let chromecastOffImage = chromecastBaseImage?.maskWith(color: chromecastOffColor)
-            self.chromecastButton?.setImage(chromecastOffImage, for: .normal)
-        }
+    private func addExternalPlayerButtons() {
+        self.addAirplayButton()
+        self.addChromecastButton()
     }
     
-    private func addExternalPlayerButtons() {
-        
+    private func addAirplayButton() {
         self.volumeView.showsVolumeSlider = false
         self.volumeView.sizeToFit()
         
@@ -298,6 +268,16 @@ class SKPlayerViewController: UIViewController {
         
         NotificationCenter.default.addObserver(self, selector: #selector(SKPlayerViewController.wirelessRouteActiveChanged), name: .MPVolumeViewWirelessRouteActiveDidChange, object: nil)
     }
+    
+    private func addChromecastButton() {
+        
+        self.chromecastButton.frame = self.chromecastContainer!.bounds
+        self.chromecastButton.tintColor = UIColor.black
+        
+        self.chromecastContainer?.addSubview(self.chromecastButton)
+        self.chromecastContainer?.backgroundColor = UIColor.clear
+    }
+    
     
     @objc private func playPause() {
         let isPlaying = self.player.rate > 0
@@ -385,7 +365,7 @@ class SKPlayerViewController: UIViewController {
     
     // MARK: - UI Update Functions
     
-    private func updateUIForHLS() {
+    private func updateUIForHLSIfNeeded() {
         if self.videoIsHLS {
             self.seekSlider?.isHidden = true
             self.timeElapsedLabel?.isHidden = true

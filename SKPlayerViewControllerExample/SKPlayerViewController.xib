@@ -16,6 +16,7 @@
                 <outlet property="airplayContainer" destination="CMQ-hD-7NM" id="cnX-zA-Bc8"/>
                 <outlet property="bottomBarContainer" destination="CER-At-xqw" id="fsL-uL-Blp"/>
                 <outlet property="bufferingIndicator" destination="eUG-Y6-X1Y" id="Kml-xz-LAH"/>
+                <outlet property="chromecastContainer" destination="fv8-kb-zgx" id="077-u7-lZv"/>
                 <outlet property="fullscreenButton" destination="9R7-nN-QZc" id="9Cj-Vq-d5W"/>
                 <outlet property="hlsLabel" destination="3DD-eL-qeP" id="ch9-KO-w7s"/>
                 <outlet property="playPauseButton" destination="oEg-UO-0aT" id="e0H-DO-R3x"/>
@@ -69,12 +70,22 @@
                                     <constraint firstAttribute="width" constant="30" id="cHi-yU-LKe"/>
                                 </constraints>
                             </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fv8-kb-zgx">
+                                <rect key="frame" x="92" y="7" width="30" height="30"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="30" id="DDr-Uq-hGc"/>
+                                    <constraint firstAttribute="width" constant="30" id="iWZ-Gx-aPO"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <constraints>
                             <constraint firstItem="CMQ-hD-7NM" firstAttribute="leading" secondItem="oEg-UO-0aT" secondAttribute="trailing" constant="16" id="5rb-IP-neP"/>
+                            <constraint firstItem="fv8-kb-zgx" firstAttribute="centerY" secondItem="gZl-Pz-sMb" secondAttribute="centerY" id="9OI-xv-e9l"/>
                             <constraint firstItem="9R7-nN-QZc" firstAttribute="centerY" secondItem="gZl-Pz-sMb" secondAttribute="centerY" id="NhF-Sa-Dvv"/>
                             <constraint firstAttribute="trailing" secondItem="9R7-nN-QZc" secondAttribute="trailing" constant="8" id="cLK-ka-UiA"/>
                             <constraint firstItem="oEg-UO-0aT" firstAttribute="centerY" secondItem="gZl-Pz-sMb" secondAttribute="centerY" id="eER-nr-2rg"/>
+                            <constraint firstItem="fv8-kb-zgx" firstAttribute="leading" secondItem="CMQ-hD-7NM" secondAttribute="trailing" constant="8" id="eac-6s-SSg"/>
                             <constraint firstItem="oEg-UO-0aT" firstAttribute="leading" secondItem="gZl-Pz-sMb" secondAttribute="leading" constant="8" id="lxg-jS-En2"/>
                             <constraint firstItem="CMQ-hD-7NM" firstAttribute="centerY" secondItem="gZl-Pz-sMb" secondAttribute="centerY" id="tNJ-79-Rpd"/>
                         </constraints>

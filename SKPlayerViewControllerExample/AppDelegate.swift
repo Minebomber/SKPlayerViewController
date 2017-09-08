@@ -16,15 +16,28 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GCKLoggerDelegate {
     
     var secondWindow: UIWindow?
     
+    let kDebugLoggingEnabled = true
+    let kReceiverAppID = "DC85EE7f"
+    
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         
-        let options = GCKCastOptions(receiverApplicationID: "DC85EE7F")
+        let options = GCKCastOptions(receiverApplicationID: self.kReceiverAppID)
         GCKCastContext.setSharedInstanceWith(options)
         GCKLogger.sharedInstance().delegate = self
         
         return true
     }
+    
+    // MARK: - GCKLoggerDelegate
+    
+    func logMessage(_ message: String, fromFunction function: String) {
+        if (self.kDebugLoggingEnabled) {        
+            NSLog("%@ : %@", function, message)
+        }
+    }
+    
+    // MARK: -
     
     func applicationWillResignActive(_ application: UIApplication) {
         // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.

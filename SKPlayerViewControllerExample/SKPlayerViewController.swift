@@ -271,7 +271,6 @@ class SKPlayerViewController: UIViewController, GCKSessionManagerListener {
         } else {
             NSLog("no cast session")
         }
-        
     }
     
     // MARK: - UI Initial Config Functions
@@ -352,7 +351,7 @@ class SKPlayerViewController: UIViewController, GCKSessionManagerListener {
     private func addChromecastButton() {
         
         self.chromecastButton.frame = self.chromecastContainer!.bounds
-        self.chromecastButton.tintColor = UIColor.black
+        self.chromecastButton.tintColor = self.chromecastOffColor
         
         self.chromecastContainer?.addSubview(self.chromecastButton)
         self.chromecastContainer?.backgroundColor = UIColor.clear
@@ -534,12 +533,20 @@ class SKPlayerViewController: UIViewController, GCKSessionManagerListener {
         self.topBarContainer?.isHidden = false
         self.bottomBarContainer?.isHidden = false
         self.statusBarBacking?.isHidden = false
-        self.playPauseButton?.isHidden = false
+        
+        // Only if not buffering show play button
+        if self.bufferingIndicator!.isHidden {
+            self.playPauseButton?.isHidden = false
+        }
+        
         UIView.animate(withDuration: 0.25, animations: {
             self.topBarContainer?.alpha = 1
             self.bottomBarContainer?.alpha = 1
             self.statusBarBacking?.alpha = 1
-            self.playPauseButton?.alpha = 1
+            
+            if self.bufferingIndicator!.isHidden {
+                self.playPauseButton?.alpha = 1
+            }
         })
     }
     

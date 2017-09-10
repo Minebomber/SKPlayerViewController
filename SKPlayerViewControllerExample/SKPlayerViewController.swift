@@ -12,7 +12,7 @@ import AVFoundation
 import MediaPlayer
 import GoogleCast
 
-class SKPlayerViewController: UIViewController {
+class SKPlayerViewController: UIViewController, GCKSessionManagerListener {
     
     // MARK: - Variables
     
@@ -49,6 +49,9 @@ class SKPlayerViewController: UIViewController {
             self.playerOverlayView?.state = self.playerExternalState
         }
     }
+    
+    // Chromecast
+    private var sessionManager: GCKSessionManager!
     
     // Constants for KVO
     private let kPlaybackLikelyToKeepUp = "currentItem.playbackLikelyToKeepUp"
@@ -106,31 +109,31 @@ class SKPlayerViewController: UIViewController {
     
     // MARK: Config
     let playImageName: String = "sk_play"
-    let playColor: UIColor = UIColor.black
+    let playColor: UIColor = UIColor.white
     let playHighlightedColor: UIColor = UIColor.white
-    let playDisabledColor: UIColor = UIColor(red: 128/255, green: 128/255, blue: 128/255, alpha: 1.0)
+    let playDisabledColor: UIColor = UIColor(red: 189/255, green: 189/255, blue: 189/255, alpha: 1.0)
     
     let pauseImageName: String = "sk_pause"
-    let pauseColor: UIColor = UIColor.black
+    let pauseColor: UIColor = UIColor.white
     let pauseHighlightedColor: UIColor = UIColor.white
-    let pauseDisabledColor: UIColor = UIColor(red: 128/255, green: 128/255, blue: 128/255, alpha: 1.0)
+    let pauseDisabledColor: UIColor = UIColor(red: 189/255, green: 189/255, blue: 189/255, alpha: 1.0)
     
     let airplayImageName: String = "sk_airplay"
-    let airplayOffColor: UIColor = UIColor.black
+    let airplayOffColor: UIColor = UIColor.white
     let airplayOnColor: UIColor = UIColor(red: 0/255, green: 122/255, blue: 255/255, alpha: 1.0)
     let airplayHighlightedColor: UIColor = UIColor.white
     
     let chromecastImageName: String = "sk_chromecast"
-    let chromecastOffColor: UIColor = UIColor.black
+    let chromecastOffColor: UIColor = UIColor.white
     let chromecastOnColor: UIColor = UIColor(red: 0/255, green: 122/255, blue: 255/255, alpha: 1.0)
     let chromecastHighlightedColor: UIColor = UIColor.white
     
     let fullScreenImageName: String = "sk_fullscreen"
-    let fullScreenColor: UIColor = UIColor.black
+    let fullScreenColor: UIColor = UIColor.white
     let fullScreenHighlightedColor: UIColor = UIColor.white
     
     let normalScreenImageName: String = "sk_normalscreen"
-    let normalScreenColor: UIColor = UIColor.black
+    let normalScreenColor: UIColor = UIColor.white
     let normalScreenHighlightedColor: UIColor = UIColor.white
     
     // MARK: -
@@ -196,6 +199,9 @@ class SKPlayerViewController: UIViewController {
         self.updateUIForHLSIfNeeded()
         
         self.addExternalPlayerButtons()
+        
+        self.sessionManager = GCKCastContext.sharedInstance().sessionManager
+        self.sessionManager.add(self)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -216,6 +222,46 @@ class SKPlayerViewController: UIViewController {
         super.viewWillLayoutSubviews()
 
         self.playerLayer.frame = self.view.bounds
+    }
+    
+    // MARK: - GCKSessionManager methods
+    func sessionManager(_ sessionManager: GCKSessionManager, didStart session: GCKSession) {
+        NSLog("sessionManager didStartSession: %@", session)
+        self.chromecastEnabled = true
+    }
+    
+    func sessionManager(_ sessionManager: GCKSessionManager, didResumeSession session: GCKSession) {
+        NSLog("sessionManager didResumeSession: %@", session)
+        self.chromecastEnabled = true
+    }
+    
+    func sessionManager(_ sessionManager: GCKSessionManager, didEnd session: GCKSession, withError error: Error?) {
+        print("session ended with error: \(String(describing: error))")
+        self.chromecastEnabled = false
+    }
+    
+    func sessionManager(_ sessionManager: GCKSessionManager, didFailToStart session: GCKCastSession, withError error: Error) {
+        print("session failed to start with error: \(error)")
+    }
+    
+    // MARK: - GCKMediaInfo
+    private func mediaInfoFor(title: String, url: String, imageUrl: String, duration: Double) -> GCKMediaInformation {
+        let metadata = GCKMediaMetadata(metadataType: .movie)
+        metadata.setString(title, forKey: kGCKMetadataKeyTitle)
+        
+        let mediaInfo = GCKMediaInformation(contentID: url, streamType: self.videoIsHLS ? .live : .buffered, contentType: "video/mp4", metadata: metadata, streamDuration: duration, mediaTracks: nil, textTrackStyle: nil, customData: nil)
+        
+        return mediaInfo
+    }
+    
+    private func playOnChromecast(url: String) {
+        let castSession = GCKCastContext.sharedInstance().sessionManager.currentCastSession
+        if castSession != nil {
+            castSession?.remoteMediaClient?.loadMedia(self.mediaInfoFor(title: "Test Title", url: url, imageUrl: "", duration: Double(CMTimeGetSeconds(self.player.currentItem!.duration))), autoplay: true)
+        } else {
+            NSLog("no cast session")
+        }
+        
     }
     
     // MARK: - UI Initial Config Functions
@@ -339,7 +385,7 @@ class SKPlayerViewController: UIViewController {
         
         self.player.seek(to: CMTimeMakeWithSeconds(Float64(elapsedTime), timescale), toleranceBefore: kCMTimeZero, toleranceAfter: kCMTimeZero) { (completed) in
             self.hideBufferingIndicator()
-            self.playPlayer()
+            if self.playerRateBeforeSeek > 0 { self.playPlayer() }
         }
     }
     
@@ -434,10 +480,12 @@ class SKPlayerViewController: UIViewController {
             self.topBarContainer?.alpha = 0
             self.bottomBarContainer?.alpha = 0
             self.statusBarBacking?.alpha = 0
+            self.playPauseButton?.alpha = 0
         }) { (_) in
             self.topBarContainer?.isHidden = true
             self.bottomBarContainer?.isHidden = true
             self.statusBarBacking?.isHidden = true
+            self.playPauseButton?.isHidden = true
         }
     }
     
@@ -445,10 +493,12 @@ class SKPlayerViewController: UIViewController {
         self.topBarContainer?.isHidden = false
         self.bottomBarContainer?.isHidden = false
         self.statusBarBacking?.isHidden = false
+        self.playPauseButton?.isHidden = false
         UIView.animate(withDuration: 0.25, animations: {
             self.topBarContainer?.alpha = 1
             self.bottomBarContainer?.alpha = 1
             self.statusBarBacking?.alpha = 1
+            self.playPauseButton?.alpha = 1
         })
     }
     

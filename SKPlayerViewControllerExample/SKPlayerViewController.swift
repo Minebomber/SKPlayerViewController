@@ -66,8 +66,6 @@ class SKPlayerViewController: UIViewController, GCKSessionManagerListener {
     private let kPlaybackBufferFull = "currentItem.playbackBufferFull"
     private let kPlayerStatus = "currentItem.status"
     
-    private let kStatusBarFrame = "statusBarFrame"
-    
     // Tap Gesture Recognizer for showing / hiding view
     private let hideTapGestureRecognizer = UITapGestureRecognizer()
     
@@ -184,8 +182,6 @@ class SKPlayerViewController: UIViewController, GCKSessionManagerListener {
         self.player.addObserver(self, forKeyPath: kPlaybackBufferEmpty, options: .new, context: nil)
         self.player.addObserver(self, forKeyPath: kPlayerStatus, options: [.new, .initial], context: nil)
         
-        //UIApplication.shared.addObserver(self, forKeyPath: kStatusBarFrame, options: [.new, .initial], context: nil)
-        
         NotificationCenter.default.addObserver(self, selector: #selector(SKPlayerViewController.updateLocalStatusBarFrameHeight), name: .UIApplicationDidChangeStatusBarFrame, object: nil)
         
         // Setup the time observer
@@ -195,8 +191,6 @@ class SKPlayerViewController: UIViewController, GCKSessionManagerListener {
             self.updateTimeLabelsWith(elapsedTime: Float(CMTimeGetSeconds(elapsedTime)), duration: Float(CMTimeGetSeconds(self.player.currentItem!.duration)))
             self.updateSeekSliderWith(elapsedTime: Float(CMTimeGetSeconds(elapsedTime)), duration: Float(CMTimeGetSeconds(self.player.currentItem!.duration)))
             self.setWidthOfTimeLabelsBasedOnDuration(Float(CMTimeGetSeconds(self.player.currentItem!.duration)))
-            // Check if buffering indicator needed
-            //self.updateBufferingIndicatorIfNeeded()
             
         }) as AnyObject
         
@@ -800,12 +794,13 @@ class SKPlayerViewController: UIViewController, GCKSessionManagerListener {
     
     deinit {
         self.player.removeTimeObserver(self.timeObserver)
+        
         self.player.removeObserver(self, forKeyPath: kPlaybackLikelyToKeepUp)
         self.player.removeObserver(self, forKeyPath: kPlaybackBufferFull)
         self.player.removeObserver(self, forKeyPath: kPlaybackBufferEmpty)
         self.player.removeObserver(self, forKeyPath: kPlayerStatus)
         
-        UIApplication.shared.removeObserver(self, forKeyPath: kStatusBarFrame)
+        NotificationCenter.removeObserver(self, forKeyPath: Notification.Name.UIApplicationDidChangeStatusBarFrame.rawValue)
     }
     
     // MARK: -

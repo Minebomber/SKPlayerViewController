@@ -22,7 +22,9 @@
                 <outlet property="seekSlider" destination="boE-5j-niM" id="767-lg-cWD"/>
                 <outlet property="statusBarBacking" destination="CNU-5H-mWz" id="VUy-84-T20"/>
                 <outlet property="timeElapsedLabel" destination="Ymf-fd-fUy" id="iIY-ol-mFY"/>
+                <outlet property="timeElapsedWidth" destination="Bw6-SH-Xub" id="ldA-O6-ARC"/>
                 <outlet property="timeRemainingLabel" destination="mPo-FK-KAr" id="Ofn-x4-2km"/>
+                <outlet property="timeRemainingWidth" destination="whn-l6-8Oy" id="699-A4-eF5"/>
                 <outlet property="topBarContainer" destination="YIB-wu-6Rg" id="V4s-oy-vcF"/>
                 <outlet property="view" destination="ZOD-4L-puL" id="4cd-fY-j4y"/>
             </connections>
@@ -85,7 +87,7 @@
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="UoC-9C-duP">
                     <rect key="frame" x="0.0" y="345" width="667" height="30"/>
                     <subviews>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0:00:00" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="Ymf-fd-fUy">
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="00:00" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="Ymf-fd-fUy">
                             <rect key="frame" x="8" y="8.5" width="42" height="14"/>
                             <constraints>
                                 <constraint firstAttribute="width" constant="42" id="Bw6-SH-Xub"/>
@@ -94,7 +96,7 @@
                             <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             <nil key="highlightedColor"/>
                         </label>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0:00:00" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="mPo-FK-KAr">
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="00:00" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="mPo-FK-KAr">
                             <rect key="frame" x="617" y="8.5" width="42" height="14"/>
                             <constraints>
                                 <constraint firstAttribute="width" constant="42" id="whn-l6-8Oy"/>

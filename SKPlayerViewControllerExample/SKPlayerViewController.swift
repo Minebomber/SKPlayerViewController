@@ -55,6 +55,8 @@ class SKPlayerViewController: UIViewController, GCKSessionManagerListener {
         }
     }
     
+    private var hasSetLabelWidths = false
+    
     // Chromecast
     private var sessionManager: GCKSessionManager!
     
@@ -111,6 +113,9 @@ class SKPlayerViewController: UIViewController, GCKSessionManagerListener {
     @IBOutlet weak var hlsLabel: UILabel?
     
     @IBOutlet weak var playerOverlayView: SKPlayerOverlayView?
+    
+    @IBOutlet weak var timeElapsedWidth: NSLayoutConstraint?
+    @IBOutlet weak var timeRemainingWidth: NSLayoutConstraint?
     
     // MARK: Config
     let playImageName: String = "sk_play"
@@ -189,7 +194,7 @@ class SKPlayerViewController: UIViewController, GCKSessionManagerListener {
             
             self.updateTimeLabelsWith(elapsedTime: Float(CMTimeGetSeconds(elapsedTime)), duration: Float(CMTimeGetSeconds(self.player.currentItem!.duration)))
             self.updateSeekSliderWith(elapsedTime: Float(CMTimeGetSeconds(elapsedTime)), duration: Float(CMTimeGetSeconds(self.player.currentItem!.duration)))
-            
+            self.setWidthOfTimeLabelsBasedOnDuration(Float(CMTimeGetSeconds(self.player.currentItem!.duration)))
             // Check if buffering indicator needed
             //self.updateBufferingIndicatorIfNeeded()
             
@@ -273,6 +278,30 @@ class SKPlayerViewController: UIViewController, GCKSessionManagerListener {
     
     private func setSeekSliderThumbImage() {
         self.seekSlider?.setThumbImage(#imageLiteral(resourceName: "sk_seek_thumb_image"), for: .normal)
+    }
+    
+    private func setWidthOfTimeLabelsBasedOnDuration(_ duration: Float) {
+        
+        if !hasSetLabelWidths && duration > 0.0 {
+            
+            let durationString = "-\(hmsToString(hms: secondsToHoursMinutesSeconds(seconds: Int(roundf(duration)))))"
+            
+            let font = self.timeRemainingLabel!.font!
+            
+            let attributes = [NSFontAttributeName : font as Any]
+            
+            let durationWidth = ceil(durationString.size(attributes: attributes).width)
+            
+            self.timeElapsedWidth?.constant = durationWidth
+            self.timeRemainingWidth?.constant = durationWidth
+            
+            UIView.animate(withDuration: 0.1, animations: { 
+                self.view.layoutIfNeeded()
+            }, completion: { (_) in
+                self.hasSetLabelWidths = true
+            })
+            
+        }
     }
     
     // MARK: - Outlet Functions

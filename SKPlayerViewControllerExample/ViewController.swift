@@ -10,7 +10,7 @@ import UIKit
 
 class ViewController: UIViewController {
     
-    let playUrlString = "https://bitdash-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8" // Random Video
+    let playUrlString = "http://qthttp.apple.com.edgesuite.net/1010qwoeiuryfg/sl.m3u8" // Random Video
     //let playUrlString = "http://play.streamkit.tv/content/channel/sperantatv/vod/2017/9/semne_si_simboluri_0.player.m3u8" // SK Video
     //let playUrlString = "http://play.streamkit.tv/content/channel/sperantatv/live/sperantatv.player.m3u8" // SK Live
     

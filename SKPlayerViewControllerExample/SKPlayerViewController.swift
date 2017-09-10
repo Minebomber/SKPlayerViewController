@@ -29,6 +29,11 @@ class SKPlayerViewController: UIViewController, GCKSessionManagerListener {
     
     private var playerRateBeforeSeek: Float = 0
     
+    // New seek stuff
+    private var isSeekInProgress = false
+    private var chaseTime = kCMTimeZero
+    private var playerCurrentItemStatus: AVPlayerItemStatus = .unknown
+    
     private var volumeView = MPVolumeView()
     private var chromecastButton = GCKUICastButton()
     
@@ -186,7 +191,7 @@ class SKPlayerViewController: UIViewController, GCKSessionManagerListener {
             self.updateSeekSliderWith(elapsedTime: Float(CMTimeGetSeconds(elapsedTime)), duration: Float(CMTimeGetSeconds(self.player.currentItem!.duration)))
             
             // Check if buffering indicator needed
-            self.updateBufferingIndicatorIfNeeded()
+            //self.updateBufferingIndicatorIfNeeded()
             
         }) as AnyObject
         
@@ -220,7 +225,7 @@ class SKPlayerViewController: UIViewController, GCKSessionManagerListener {
     
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
-
+        
         self.playerLayer.frame = self.view.bounds
     }
     
@@ -377,16 +382,12 @@ class SKPlayerViewController: UIViewController, GCKSessionManagerListener {
         let videoDuration = Float(CMTimeGetSeconds(self.player.currentItem!.duration))
         let elapsedTime = videoDuration * seekSlider!.value
         
-        let timescale = self.player.currentItem!.asset.duration.timescale
-        
         self.updateTimeLabelsWith(elapsedTime: elapsedTime, duration: videoDuration)
         
-        self.showBufferingIndiciator()
+        let timescale = self.player.currentItem!.asset.duration.timescale
         
-        self.player.seek(to: CMTimeMakeWithSeconds(Float64(elapsedTime), timescale), toleranceBefore: kCMTimeZero, toleranceAfter: kCMTimeZero) { (completed) in
-            self.hideBufferingIndicator()
-            if self.playerRateBeforeSeek > 0 { self.playPlayer() }
-        }
+        let newSeekTime = CMTimeMakeWithSeconds(Float64(elapsedTime), timescale)
+        self.stopPlayingAndSeekSmoothlyToTime(newChaseTime: newSeekTime)
     }
     
     @objc private func sliderValueChanged() {
@@ -394,6 +395,11 @@ class SKPlayerViewController: UIViewController, GCKSessionManagerListener {
         let elapsedTime = videoDuration * seekSlider!.value
         
         self.updateTimeLabelsWith(elapsedTime: elapsedTime, duration: videoDuration)
+        
+        let timescale = self.player.currentItem!.asset.duration.timescale
+        
+        let newSeekTime = CMTimeMakeWithSeconds(Float64(elapsedTime), timescale)
+        self.stopPlayingAndSeekSmoothlyToTime(newChaseTime: newSeekTime)
     }
     
     @objc private func toggleFullScreen() {
@@ -454,13 +460,19 @@ class SKPlayerViewController: UIViewController, GCKSessionManagerListener {
         
         if !self.videoIsHLS {
             
-            let progress = elapsedTime / duration
-            self.seekSlider?.setValue(progress, animated: true)
+            if !self.isSeekInProgress {
+                let progress = elapsedTime / duration
+                self.seekSlider?.setValue(progress, animated: true)
+            } else {
+                let chaseTimeInSeconds = CMTimeGetSeconds(self.chaseTime)
+                let progress = Float(chaseTimeInSeconds) / duration
+                self.seekSlider?.setValue(progress, animated: true)
+            }
         }
     }
     
     @objc private func toggleControlsHidden(sender: UITapGestureRecognizer) {
-
+        
         let point = sender.location(in: self.view)
         let tappedView = self.view.hitTest(point, with: nil)
         if tappedView == self.view || tappedView?.restorationIdentifier == "overlayView" {
@@ -518,14 +530,22 @@ class SKPlayerViewController: UIViewController, GCKSessionManagerListener {
     }
     
     private func showBufferingIndiciator() {
-        self.disablePlayPauseButton()
-        self.bufferingIndicator?.startAnimating()
-        self.bufferingIndicator?.isHidden = false
+        //self.disablePlayPauseButton()
+        DispatchQueue.main.async {
+            self.playPauseButton?.isHidden = true
+            
+            self.bufferingIndicator?.startAnimating()
+            self.bufferingIndicator?.isHidden = false
+        }
     }
     
     private func hideBufferingIndicator() {
-        self.enablePlayPauseButton()
-        self.bufferingIndicator?.stopAnimating()
+        //self.enablePlayPauseButton()
+        DispatchQueue.main.async {
+            self.bufferingIndicator?.stopAnimating()
+            
+            self.playPauseButton?.isHidden = false
+        }
     }
     
     // Fullscreen stuff.
@@ -544,7 +564,7 @@ class SKPlayerViewController: UIViewController, GCKSessionManagerListener {
         
         self.isFullscreen = true
         
-        UIView.animate(withDuration: 0.25) { 
+        UIView.animate(withDuration: 0.25) {
             self.view.frame = self.view.window!.bounds
             self.view.layoutIfNeeded()
             self.setNeedsStatusBarAppearanceUpdate()
@@ -638,7 +658,7 @@ class SKPlayerViewController: UIViewController, GCKSessionManagerListener {
             
             self.playerExternalState = .none
             return
-    
+            
         }
     }
     
@@ -679,28 +699,67 @@ class SKPlayerViewController: UIViewController, GCKSessionManagerListener {
         }
     }
     
+    // Seeking stuff: https://developer.apple.com/library/content/qa/qa1820/_index.html
+    private func stopPlayingAndSeekSmoothlyToTime(newChaseTime: CMTime) {
+        self.showBufferingIndiciator()
+        self.pausePlayer()
+        
+        if CMTimeCompare(newChaseTime, self.chaseTime) != 0 {
+            self.chaseTime = newChaseTime
+            
+            if !self.isSeekInProgress {
+                self.tryToSeekToChaseTime()
+            }
+        }
+    }
+    
+    private func tryToSeekToChaseTime() {
+        if self.playerCurrentItemStatus == .unknown {
+            // wait for to be ready
+            return
+        } else if self.playerCurrentItemStatus == .readyToPlay {
+            self.actuallySeekToTime()
+        }
+    }
+    
+    private func actuallySeekToTime() {
+        self.isSeekInProgress = true
+        let seekTimeInProgress = self.chaseTime
+        self.player.seek(to: seekTimeInProgress, toleranceBefore: kCMTimeZero, toleranceAfter: kCMTimeZero) { (completed) in
+            
+            if CMTimeCompare(seekTimeInProgress, self.chaseTime) == 0 {
+                self.isSeekInProgress = false
+                self.hideBufferingIndicator()
+                if self.playerRateBeforeSeek > 0 {
+                    self.playPlayer()
+                }
+            } else {
+                self.tryToSeekToChaseTime()
+            }
+            
+        }
+    }
+    
     // MARK: -
     
     // MARK: KVO
     
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+        self.updateBufferingIndicatorIfNeeded()
         switch keyPath! {
         case kPlaybackLikelyToKeepUp:
-            self.hideBufferingIndicator()
             self.playPlayer()
         case kPlaybackBufferFull:
-            self.hideBufferingIndicator()
             self.playPlayer()
-        case kPlaybackBufferEmpty:
-            self.showBufferingIndiciator()
+        case kPlaybackBufferEmpty: break
         case kPlayerStatus:
-            if self.player.currentItem!.status == .readyToPlay {
-                self.hideBufferingIndicator()
-            } else {
-                self.showBufferingIndiciator()
+            
+            self.playerCurrentItemStatus = self.player.currentItem!.status
+            
+            if self.playerCurrentItemStatus == .readyToPlay && self.isSeekInProgress {
+                // kvo done waiting
+                self.tryToSeekToChaseTime()
             }
-        case kStatusBarFrame:
-            print(UIApplication.shared.statusBarFrame.height)
         default:
             break
         }

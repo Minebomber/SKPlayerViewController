@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+class ViewController: UIViewController, SKPlayerViewControllerDelegate {
     
     let playUrlString = "http://qthttp.apple.com.edgesuite.net/1010qwoeiuryfg/sl.m3u8" // Random Video
     //let playUrlString = "http://play.streamkit.tv/content/channel/sperantatv/vod/2017/9/semne_si_simboluri_0.player.m3u8" // SK Video
@@ -50,8 +50,9 @@ class ViewController: UIViewController {
     func presentPlayer() {
         if !self.hasPresentedPlayer {
             let url = URL(string: playUrlString)
-            playerViewController = SKPlayerViewController(url: url!, isLiveStream: isLive)
-            self.present(playerViewController, animated: true) {
+            self.playerViewController = SKPlayerViewController(url: url!, isLiveStream: isLive)
+            self.playerViewController.delegate = self
+            self.present(self.playerViewController, animated: true) {
                 self.hasPresentedPlayer = true
             }
         }
@@ -60,15 +61,22 @@ class ViewController: UIViewController {
     func showPlayerInView() {
         
         let url = URL(string: playUrlString)
-        playerViewController = SKPlayerViewController(url: url!, isLiveStream: isLive)
+        self.playerViewController = SKPlayerViewController(url: url!, isLiveStream: isLive)
         
-        self.addChildViewController(playerViewController)
+        self.addChildViewController(self.playerViewController)
         
-        playerViewController.view.frame = self.playerContainer.bounds
-        self.playerContainer.addSubview(playerViewController.view)
+        self.playerViewController.view.frame = self.playerContainer.bounds
+        self.playerContainer.addSubview(self.playerViewController.view)
         //playerVC.view.bindFrameToSuperviewBounds()
     }
     
+    // MARK: SKPlayerViewControlerDelegate methods
+    
+    func playerViewControllerDidDismissCompletely(_ controller: SKPlayerViewController) {
+        self.playerViewController.deallocPlayer()
+        self.playerViewController = nil
+        print(self.playerViewController)
+    }
     
     
     /*

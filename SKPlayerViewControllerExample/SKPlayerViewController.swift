@@ -16,13 +16,15 @@ class SKPlayerViewController: UIViewController, GCKSessionManagerListener {
     
     // MARK: - Variables
     
+    weak var delegate: SKPlayerViewControllerDelegate!
+    
     private var playbackLikelyToKeepUpContext = 0
     
     private var playUrl: URL!
     
     private var videoIsHLS: Bool = false
     
-    private let player = AVPlayer()
+    private var player: AVPlayer? = AVPlayer()
     private var playerLayer: AVPlayerLayer!
     
     private var timeObserver: AnyObject!
@@ -174,24 +176,25 @@ class SKPlayerViewController: UIViewController, GCKSessionManagerListener {
         view.layer.insertSublayer(playerLayer, at: 0)
         
         let playerItem = AVPlayerItem(url: self.playUrl)
-        self.player.replaceCurrentItem(with: playerItem)
+        self.player?.replaceCurrentItem(with: playerItem)
         
         // Setup KVO
-        self.player.addObserver(self, forKeyPath: kPlaybackLikelyToKeepUp, options: .new, context: nil)
-        self.player.addObserver(self, forKeyPath: kPlaybackBufferFull, options: .new, context: nil)
-        self.player.addObserver(self, forKeyPath: kPlaybackBufferEmpty, options: .new, context: nil)
-        self.player.addObserver(self, forKeyPath: kPlayerStatus, options: [.new, .initial], context: nil)
+        self.player?.addObserver(self, forKeyPath: kPlaybackLikelyToKeepUp, options: .new, context: nil)
+        self.player?.addObserver(self, forKeyPath: kPlaybackBufferFull, options: .new, context: nil)
+        self.player?.addObserver(self, forKeyPath: kPlaybackBufferEmpty, options: .new, context: nil)
+        self.player?.addObserver(self, forKeyPath: kPlayerStatus, options: [.new, .initial], context: nil)
         
         NotificationCenter.default.addObserver(self, selector: #selector(SKPlayerViewController.updateLocalStatusBarFrameHeight), name: .UIApplicationDidChangeStatusBarFrame, object: nil)
         
         // Setup the time observer
         let timeInterval = CMTimeMakeWithSeconds(1.0, 10)
-        self.timeObserver = self.player.addPeriodicTimeObserver(forInterval: timeInterval, queue: DispatchQueue.main, using: { (elapsedTime: CMTime) in
+        self.timeObserver = self.player?.addPeriodicTimeObserver(forInterval: timeInterval, queue: DispatchQueue.main, using: { (elapsedTime: CMTime) in
             
-            self.updateTimeLabelsWith(elapsedTime: Float(CMTimeGetSeconds(elapsedTime)), duration: Float(CMTimeGetSeconds(self.player.currentItem!.duration)))
-            self.updateSeekSliderWith(elapsedTime: Float(CMTimeGetSeconds(elapsedTime)), duration: Float(CMTimeGetSeconds(self.player.currentItem!.duration)))
-            self.setWidthOfTimeLabelsBasedOnDuration(Float(CMTimeGetSeconds(self.player.currentItem!.duration)))
-            
+            if self.player != nil {
+                self.updateTimeLabelsWith(elapsedTime: Float(CMTimeGetSeconds(elapsedTime)), duration: Float(CMTimeGetSeconds(self.player!.currentItem!.duration)))
+                self.updateSeekSliderWith(elapsedTime: Float(CMTimeGetSeconds(elapsedTime)), duration: Float(CMTimeGetSeconds(self.player!.currentItem!.duration)))
+                self.setWidthOfTimeLabelsBasedOnDuration(Float(CMTimeGetSeconds(self.player!.currentItem!.duration)))
+            }
         }) as AnyObject
         
         self.setSeekSliderThumbImage()
@@ -267,7 +270,7 @@ class SKPlayerViewController: UIViewController, GCKSessionManagerListener {
     private func playOnChromecast(url: String) {
         let castSession = GCKCastContext.sharedInstance().sessionManager.currentCastSession
         if castSession != nil {
-            castSession?.remoteMediaClient?.loadMedia(self.mediaInfoFor(title: "Test Title", url: url, imageUrl: "", duration: Double(CMTimeGetSeconds(self.player.currentItem!.duration))), autoplay: true)
+            castSession?.remoteMediaClient?.loadMedia(self.mediaInfoFor(title: "Test Title", url: url, imageUrl: "", duration: Double(CMTimeGetSeconds(self.player!.currentItem!.duration))), autoplay: true)
         } else {
             NSLog("no cast session")
         }
@@ -294,7 +297,7 @@ class SKPlayerViewController: UIViewController, GCKSessionManagerListener {
             self.timeElapsedWidth?.constant = durationWidth
             self.timeRemainingWidth?.constant = durationWidth
             
-            UIView.animate(withDuration: 0.1, animations: { 
+            UIView.animate(withDuration: 0.1, animations: {
                 self.view.layoutIfNeeded()
             }, completion: { (_) in
                 self.hasSetLabelWidths = true
@@ -359,7 +362,7 @@ class SKPlayerViewController: UIViewController, GCKSessionManagerListener {
     
     
     @objc private func playPause() {
-        let isPlaying = self.player.rate > 0
+        let isPlaying = self.player!.rate > 0
         if isPlaying {
             self.pausePlayer()
         } else {
@@ -381,7 +384,7 @@ class SKPlayerViewController: UIViewController, GCKSessionManagerListener {
         let pauseDisabledImage = pauseBaseImage.maskWith(color: pauseDisabledColor)
         self.playPauseButton?.setImage(pauseDisabledImage, for: .disabled)
         
-        self.player.play()
+        self.player?.play()
     }
     
     private func pausePlayer() {
@@ -398,33 +401,33 @@ class SKPlayerViewController: UIViewController, GCKSessionManagerListener {
         let playDisabledImage = playBaseImage.maskWith(color: playDisabledColor)
         self.playPauseButton?.setImage(playDisabledImage, for: .disabled)
         
-        self.player.pause()
+        self.player?.pause()
     }
     
     @objc private func sliderBeganTracking() {
-        self.playerRateBeforeSeek = self.player.rate
+        self.playerRateBeforeSeek = self.player!.rate
         self.pausePlayer()
     }
     
     @objc private func sliderEndedTracking() {
-        let videoDuration = Float(CMTimeGetSeconds(self.player.currentItem!.duration))
+        let videoDuration = Float(CMTimeGetSeconds(self.player!.currentItem!.duration))
         let elapsedTime = videoDuration * seekSlider!.value
         
         self.updateTimeLabelsWith(elapsedTime: elapsedTime, duration: videoDuration)
         
-        let timescale = self.player.currentItem!.asset.duration.timescale
+        let timescale = self.player!.currentItem!.asset.duration.timescale
         
         let newSeekTime = CMTimeMakeWithSeconds(Float64(elapsedTime), timescale)
         self.stopPlayingAndSeekSmoothlyToTime(newChaseTime: newSeekTime)
     }
     
     @objc private func sliderValueChanged() {
-        let videoDuration = Float(CMTimeGetSeconds(self.player.currentItem!.duration))
+        let videoDuration = Float(CMTimeGetSeconds(self.player!.currentItem!.duration))
         let elapsedTime = videoDuration * seekSlider!.value
         
         self.updateTimeLabelsWith(elapsedTime: elapsedTime, duration: videoDuration)
         
-        let timescale = self.player.currentItem!.asset.duration.timescale
+        let timescale = self.player!.currentItem!.asset.duration.timescale
         
         let newSeekTime = CMTimeMakeWithSeconds(Float64(elapsedTime), timescale)
         self.stopPlayingAndSeekSmoothlyToTime(newChaseTime: newSeekTime)
@@ -552,9 +555,9 @@ class SKPlayerViewController: UIViewController, GCKSessionManagerListener {
     
     private func updateBufferingIndicatorIfNeeded() {
         
-        let likelyToKeepUp = self.player.currentItem!.isPlaybackLikelyToKeepUp
-        let bufferFull = self.player.currentItem!.isPlaybackBufferFull
-        let bufferEmpty = self.player.currentItem!.isPlaybackBufferEmpty
+        let likelyToKeepUp = self.player!.currentItem!.isPlaybackLikelyToKeepUp
+        let bufferFull = self.player!.currentItem!.isPlaybackBufferFull
+        let bufferEmpty = self.player!.currentItem!.isPlaybackBufferEmpty
         
         if (likelyToKeepUp || bufferFull) && !self.bufferingIndicator!.isHidden {
             self.hideBufferingIndicator()
@@ -633,7 +636,10 @@ class SKPlayerViewController: UIViewController, GCKSessionManagerListener {
     }
     
     private func dismissCompletely() {
-        self.dismiss(animated: true, completion: nil)
+        self.dismiss(animated: true) {
+            //NotificationCenter.removeObserver(self, forKeyPath: Notification.Name.UIApplicationDidChangeStatusBarFrame.rawValue)
+            self.delegate.playerViewControllerDidDismissCompletely(self)
+        }
     }
     
     private func updateFullscreenImage() {
@@ -667,6 +673,12 @@ class SKPlayerViewController: UIViewController, GCKSessionManagerListener {
     }
     
     // MARK: - Utility Functions
+    
+    func deallocPlayer() {
+        self.pausePlayer()
+        self.playerLayer.removeFromSuperlayer()
+        self.player = nil
+    }
     
     private func updateStateForIndependentExternalVars() {
         
@@ -758,7 +770,7 @@ class SKPlayerViewController: UIViewController, GCKSessionManagerListener {
     private func actuallySeekToTime() {
         self.isSeekInProgress = true
         let seekTimeInProgress = self.chaseTime
-        self.player.seek(to: seekTimeInProgress, toleranceBefore: kCMTimeZero, toleranceAfter: kCMTimeZero) { (completed) in
+        self.player!.seek(to: seekTimeInProgress, toleranceBefore: kCMTimeZero, toleranceAfter: kCMTimeZero) { (completed) in
             
             if CMTimeCompare(seekTimeInProgress, self.chaseTime) == 0 {
                 self.isSeekInProgress = false
@@ -787,7 +799,7 @@ class SKPlayerViewController: UIViewController, GCKSessionManagerListener {
         case kPlaybackBufferEmpty: break
         case kPlayerStatus:
             
-            self.playerCurrentItemStatus = self.player.currentItem!.status
+            self.playerCurrentItemStatus = self.player!.currentItem!.status
             
             if self.playerCurrentItemStatus == .readyToPlay && self.isSeekInProgress {
                 // kvo done waiting
@@ -799,14 +811,17 @@ class SKPlayerViewController: UIViewController, GCKSessionManagerListener {
     }
     
     deinit {
-        self.player.removeTimeObserver(self.timeObserver)
         
-        self.player.removeObserver(self, forKeyPath: kPlaybackLikelyToKeepUp)
-        self.player.removeObserver(self, forKeyPath: kPlaybackBufferFull)
-        self.player.removeObserver(self, forKeyPath: kPlaybackBufferEmpty)
-        self.player.removeObserver(self, forKeyPath: kPlayerStatus)
+        self.player?.removeTimeObserver(self.timeObserver)
         
-        NotificationCenter.removeObserver(self, forKeyPath: Notification.Name.UIApplicationDidChangeStatusBarFrame.rawValue)
+        self.player?.removeObserver(self, forKeyPath: kPlaybackLikelyToKeepUp)
+        self.player?.removeObserver(self, forKeyPath: kPlaybackBufferFull)
+        self.player?.removeObserver(self, forKeyPath: kPlaybackBufferEmpty)
+        self.player?.removeObserver(self, forKeyPath: kPlayerStatus)
+        
+        print("dealloc")
+        
+        self.deallocPlayer()
     }
     
     // MARK: -

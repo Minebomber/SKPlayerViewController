@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		0EC76286AA4561C1754061C6 /* Pods_SKPlayerViewControllerExample.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B2AA382BC6C8FB08C3604C87 /* Pods_SKPlayerViewControllerExample.framework */; };
+		4D4056B31F658C8000F6C903 /* SKPlayerViewControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D4056B21F658C8000F6C903 /* SKPlayerViewControllerDelegate.swift */; };
 		4D598D2E1F5E05E0007B0DAE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4D598D2C1F5E05A7007B0DAE /* Assets.xcassets */; };
 		4D598D301F5E096E007B0DAE /* SKAssets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4D598D2F1F5E096E007B0DAE /* SKAssets.xcassets */; };
 		4D717DEB1F5C58210008143B /* SKExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D717DEA1F5C58210008143B /* SKExtensions.swift */; };
@@ -23,6 +24,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		4D4056B21F658C8000F6C903 /* SKPlayerViewControllerDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SKPlayerViewControllerDelegate.swift; sourceTree = "<group>"; };
 		4D598D2C1F5E05A7007B0DAE /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		4D598D2F1F5E096E007B0DAE /* SKAssets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = SKAssets.xcassets; sourceTree = "<group>"; };
 		4D717DEA1F5C58210008143B /* SKExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SKExtensions.swift; sourceTree = "<group>"; };
@@ -60,6 +62,14 @@
 				B2AA382BC6C8FB08C3604C87 /* Pods_SKPlayerViewControllerExample.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		4D4056B11F658C7200F6C903 /* Delegate */ = {
+			isa = PBXGroup;
+			children = (
+				4D4056B21F658C8000F6C903 /* SKPlayerViewControllerDelegate.swift */,
+			);
+			name = Delegate;
 			sourceTree = "<group>";
 		};
 		4D717DF41F5C62AC0008143B /* Images */ = {
@@ -132,6 +142,7 @@
 		4DBEA8381F55040B00C143EF /* SKPlayerViewController */ = {
 			isa = PBXGroup;
 			children = (
+				4D4056B11F658C7200F6C903 /* Delegate */,
 				4D717DF51F5C62B80008143B /* View Controller */,
 				4D717DF71F5C62CF0008143B /* Overlay View */,
 				4D717DF81F5C62DA0008143B /* Utilites */,
@@ -277,6 +288,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4D717DF31F5C5F980008143B /* SKGlobals.swift in Sources */,
+				4D4056B31F658C8000F6C903 /* SKPlayerViewControllerDelegate.swift in Sources */,
 				4DBEA83A1F55041A00C143EF /* ViewController.swift in Sources */,
 				4DBEA8351F54D9A900C143EF /* SKPlayerViewController.swift in Sources */,
 				4DBEA8231F54D95A00C143EF /* AppDelegate.swift in Sources */,

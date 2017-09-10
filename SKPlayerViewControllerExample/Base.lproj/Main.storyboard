@@ -29,10 +29,19 @@
                                     <constraint firstAttribute="width" secondItem="7xI-GX-ek8" secondAttribute="height" multiplier="375:200" id="1BK-WK-clC"/>
                                 </constraints>
                             </view>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ox9-uX-DIr">
+                                <rect key="frame" x="156" y="613" width="63" height="34"/>
+                                <state key="normal" title="Present"/>
+                                <connections>
+                                    <action selector="presentPlayerAction" destination="BYZ-38-t0r" eventType="touchUpInside" id="GeH-hp-Uge"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" red="0.0" green="0.50196081400000003" blue="0.50196081400000003" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
                             <constraint firstItem="7xI-GX-ek8" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" id="Ek2-8O-iHk"/>
+                            <constraint firstItem="Ox9-uX-DIr" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="Wlp-Tl-fAf"/>
+                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="Ox9-uX-DIr" secondAttribute="bottom" constant="20" id="h7e-1V-Us3"/>
                             <constraint firstAttribute="trailing" secondItem="7xI-GX-ek8" secondAttribute="trailing" id="tUv-JZ-2l1"/>
                             <constraint firstItem="7xI-GX-ek8" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="vyq-Zx-gPj"/>
                         </constraints>

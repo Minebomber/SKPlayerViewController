@@ -555,16 +555,19 @@ class SKPlayerViewController: UIViewController, GCKSessionManagerListener {
     
     private func updateBufferingIndicatorIfNeeded() {
         
-        let likelyToKeepUp = self.player!.currentItem!.isPlaybackLikelyToKeepUp
-        let bufferFull = self.player!.currentItem!.isPlaybackBufferFull
-        let bufferEmpty = self.player!.currentItem!.isPlaybackBufferEmpty
-        
-        if (likelyToKeepUp || bufferFull) && !self.bufferingIndicator!.isHidden {
-            self.hideBufferingIndicator()
-        }
-        
-        if bufferEmpty && self.bufferingIndicator!.isHidden {
-            self.showBufferingIndiciator()
+        if self.player != nil {
+            
+            let likelyToKeepUp = self.player!.currentItem!.isPlaybackLikelyToKeepUp
+            let bufferFull = self.player!.currentItem!.isPlaybackBufferFull
+            let bufferEmpty = self.player!.currentItem!.isPlaybackBufferEmpty
+            
+            if (likelyToKeepUp || bufferFull) && !self.bufferingIndicator!.isHidden {
+                self.hideBufferingIndicator()
+            }
+            
+            if bufferEmpty && self.bufferingIndicator!.isHidden {
+                self.showBufferingIndiciator()
+            }
         }
     }
     
@@ -798,12 +801,13 @@ class SKPlayerViewController: UIViewController, GCKSessionManagerListener {
             self.playPlayer()
         case kPlaybackBufferEmpty: break
         case kPlayerStatus:
-            
-            self.playerCurrentItemStatus = self.player!.currentItem!.status
-            
-            if self.playerCurrentItemStatus == .readyToPlay && self.isSeekInProgress {
-                // kvo done waiting
-                self.tryToSeekToChaseTime()
+            if self.player != nil {
+                self.playerCurrentItemStatus = self.player!.currentItem!.status
+                
+                if self.playerCurrentItemStatus == .readyToPlay && self.isSeekInProgress {
+                    // kvo done waiting
+                    self.tryToSeekToChaseTime()
+                }
             }
         default:
             break

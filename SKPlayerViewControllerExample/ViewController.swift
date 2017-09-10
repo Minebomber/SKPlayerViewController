@@ -43,19 +43,15 @@ class ViewController: UIViewController, SKPlayerViewControllerDelegate {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        self.presentPlayer()
+        //self.presentPlayer()
         //        self.showPlayerInView()
     }
     
     func presentPlayer() {
-        if !self.hasPresentedPlayer {
             let url = URL(string: playUrlString)
             self.playerViewController = SKPlayerViewController(url: url!, isLiveStream: isLive)
             self.playerViewController.delegate = self
-            self.present(self.playerViewController, animated: true) {
-                self.hasPresentedPlayer = true
-            }
-        }
+            self.present(self.playerViewController, animated: true, completion: nil)
     }
     
     func showPlayerInView() {
@@ -78,6 +74,9 @@ class ViewController: UIViewController, SKPlayerViewControllerDelegate {
         print(self.playerViewController)
     }
     
+    @IBAction func presentPlayerAction() {
+        self.presentPlayer()
+    }
     
     /*
      // MARK: - Navigation

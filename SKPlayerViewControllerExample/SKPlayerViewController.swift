@@ -605,26 +605,23 @@ class SKPlayerViewController: UIViewController, GCKSessionManagerListener {
         if self.isFullscreen {
             
             let baseNormalScreenImage = UIImage(named: normalScreenImageName)
-            
             let normalscreenImage = baseNormalScreenImage?.maskWith(color: normalScreenColor)
-            self.fullscreenButton?.setImage(normalscreenImage, for: .normal)
-            
             let highlightedNormalscreenImage = baseNormalScreenImage?.maskWith(color: normalScreenHighlightedColor)
+            
+            self.fullscreenButton?.setImage(normalscreenImage, for: .normal)
             self.fullscreenButton?.setImage(highlightedNormalscreenImage, for: .selected)
             self.fullscreenButton?.setImage(highlightedNormalscreenImage, for: .highlighted)
             
         } else {
             
             let baseFullScreenImage = UIImage(named: fullScreenImageName)
-            
             let fullscreenImage = baseFullScreenImage?.maskWith(color: fullScreenColor)
-            self.fullscreenButton?.setImage(fullscreenImage, for: .normal)
-            
             let highlightedFullscreenImage = baseFullScreenImage?.maskWith(color: fullScreenHighlightedColor)
+            
+            self.fullscreenButton?.setImage(fullscreenImage, for: .normal)
             self.fullscreenButton?.setImage(highlightedFullscreenImage, for: .selected)
             self.fullscreenButton?.setImage(highlightedFullscreenImage, for: .highlighted)
         }
-        
     }
     
     @objc private func wirelessRouteActiveChanged() {

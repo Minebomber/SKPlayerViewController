@@ -41,8 +41,8 @@ class ViewController: UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        //self.presentPlayer()
-        self.showPlayerInView()
+        self.presentPlayer()
+//        self.showPlayerInView()
     }
     
     func presentPlayer() {

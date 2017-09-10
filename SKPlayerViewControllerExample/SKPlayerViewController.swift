@@ -206,6 +206,10 @@ class SKPlayerViewController: UIViewController, GCKSessionManagerListener {
         
         self.sessionManager = GCKCastContext.sharedInstance().sessionManager
         self.sessionManager.add(self)
+        
+        // Add top layout guide constraint
+        let topGuide = self.topLayoutGuide
+        self.view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:[topGuide]-0-[topView]", options: NSLayoutFormatOptions(rawValue: 0), metrics: nil, views: ["topGuide" : topGuide, "topView" : self.topBarContainer!]))
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -218,6 +222,8 @@ class SKPlayerViewController: UIViewController, GCKSessionManagerListener {
             self.isEmbeded = false
             self.isFullscreen = true
         }
+        
+        self.setNeedsStatusBarAppearanceUpdate()
         
         self.playPlayer() // Start playback
     }

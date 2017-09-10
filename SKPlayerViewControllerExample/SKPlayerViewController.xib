@@ -40,10 +40,7 @@
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="CNU-5H-mWz">
                     <rect key="frame" x="0.0" y="0.0" width="667" height="0.0"/>
-                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                    <constraints>
-                        <constraint firstAttribute="height" id="Nv8-UH-Wy7"/>
-                    </constraints>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="YIB-wu-6Rg">
                     <rect key="frame" x="0.0" y="0.0" width="667" height="40"/>
@@ -142,6 +139,7 @@
             </subviews>
             <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
             <constraints>
+                <constraint firstItem="YIB-wu-6Rg" firstAttribute="top" secondItem="CNU-5H-mWz" secondAttribute="bottom" id="2D7-mc-9YW"/>
                 <constraint firstItem="YIB-wu-6Rg" firstAttribute="leading" secondItem="ZOD-4L-puL" secondAttribute="leading" id="3YM-v6-Kot"/>
                 <constraint firstAttribute="bottom" secondItem="zI1-e2-hM2" secondAttribute="bottom" id="3cY-bN-pAt"/>
                 <constraint firstAttribute="trailing" secondItem="CNU-5H-mWz" secondAttribute="trailing" id="6VF-d5-Fzj"/>

@@ -16,6 +16,10 @@ class SKPlayerViewController: UIViewController, GCKSessionManagerListener {
     
     // MARK: - Variables
     
+    private var video: SKVideo!
+    
+    private var castMediaController = GCKUIMediaController()
+    
     weak var delegate: SKPlayerViewControllerDelegate!
     
     private var playbackLikelyToKeepUpContext = 0
@@ -151,11 +155,13 @@ class SKPlayerViewController: UIViewController, GCKSessionManagerListener {
     
     // MARK: Inits
     
-    init(url: URL, isLiveStream: Bool = false) {
+    init(video: SKVideo) {
         super.init(nibName: "SKPlayerViewController", bundle: nil)
         
-        self.playUrl = url
-        self.videoIsHLS = isLiveStream
+        self.video = video
+        
+        self.playUrl = URL(string: self.video.streamUrl)
+        self.videoIsHLS = self.video.isLiveStream
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -242,7 +248,7 @@ class SKPlayerViewController: UIViewController, GCKSessionManagerListener {
         self.playerLayer.frame = self.view.bounds
     }
     
-    // MARK: - GCKSessionManager methods
+    // MARK: - Chromecast Methods
     func sessionManager(_ sessionManager: GCKSessionManager, didStart session: GCKSession) {
         NSLog("sessionManager didStartSession: %@", session)
         self.chromecastEnabled = true
@@ -262,7 +268,7 @@ class SKPlayerViewController: UIViewController, GCKSessionManagerListener {
         print("session failed to start with error: \(error)")
     }
     
-    // MARK: - GCKMediaInfo
+    
     private func mediaInfoFor(title: String, url: String, imageUrl: String, duration: Double) -> GCKMediaInformation {
         let metadata = GCKMediaMetadata(metadataType: .movie)
         metadata.setString(title, forKey: kGCKMetadataKeyTitle)
@@ -279,6 +285,27 @@ class SKPlayerViewController: UIViewController, GCKSessionManagerListener {
         } else {
             NSLog("no cast session")
         }
+    }
+    
+    private func switchChromecastToLocalPlayback() {
+        if self.chromecastEnabled == false { return }
+        
+        var playPosition = 0.0
+        var paused = false
+        var ended = false
+        
+        if self.chromecastEnabled == true {
+            
+            playPosition = self.castMediaController.lastKnownStreamPosition
+            paused = self.castMediaController.lastKnownPlayerState == .paused
+            ended = self.castMediaController.lastKnownPlayerState == .idle
+            
+            
+        }
+    }
+    
+    private func switchChromecastToRemotePlayback() {
+        
     }
     
     // MARK: - UI Initial Config Functions
@@ -476,8 +503,10 @@ class SKPlayerViewController: UIViewController, GCKSessionManagerListener {
     private func updateTimeLabelsWith(elapsedTime: Float, duration: Float) {
         
         if !self.videoIsHLS {
+            if elapsedTime.isFinite {
+                self.timeElapsedLabel?.text = hmsToString(hms: secondsToHoursMinutesSeconds(seconds: Int(roundf(elapsedTime)))) // Basically convert seconds to the time string
+            }
             
-            self.timeElapsedLabel?.text = hmsToString(hms: secondsToHoursMinutesSeconds(seconds: Int(roundf(elapsedTime)))) // Basically convert seconds to the time string
             let timeRemaining = duration - elapsedTime
             
             if timeRemaining.isFinite {

@@ -10,15 +10,15 @@ import UIKit
 
 class ViewController: UIViewController, SKPlayerViewControllerDelegate {
     
-    let playUrlString = "https://bitdash-a.akamaihd.net/content/sintel/hls/playlist.m3u8" // Random Video
-    //let playUrlString = "http://play.streamkit.tv/content/channel/sperantatv/vod/2017/9/semne_si_simboluri_0.player.m3u8" // SK Video
-    //let playUrlString = "http://play.streamkit.tv/content/channel/sperantatv/live/sperantatv.player.m3u8" // SK Live
-    
-    let isLive = false
-    
     var playerViewController: SKPlayerViewController!
     
     var hasPresentedPlayer = false
+    
+    let video = SKVideo(title: "Academica - 10 09 2017",
+                        album: "Academica", duration: 2972300,
+                        streamUrl: "http://play.streamkit.tv/content/channel/sperantatv/vod/2017/9/academica_10_09_2017.player.m3u8",
+                        thumbnailUrl: "http://space.streamkit.tv/hdd7/content/channel/sperantatv/vod/2017/9/academica_10_09_2017.mp4_medium.jpg",
+                        isLiveStream: false)
     
     override var childViewControllerForStatusBarHidden: UIViewController? {
         return playerViewController
@@ -48,16 +48,13 @@ class ViewController: UIViewController, SKPlayerViewControllerDelegate {
     }
     
     func presentPlayer() {
-            let url = URL(string: playUrlString)
-            self.playerViewController = SKPlayerViewController(url: url!, isLiveStream: isLive)
-            self.playerViewController.delegate = self
-            self.present(self.playerViewController, animated: true, completion: nil)
+        self.playerViewController = SKPlayerViewController(video: self.video)
+        self.playerViewController.delegate = self
+        self.present(self.playerViewController, animated: true, completion: nil)
     }
     
     func showPlayerInView() {
-        
-        let url = URL(string: playUrlString)
-        self.playerViewController = SKPlayerViewController(url: url!, isLiveStream: isLive)
+        self.playerViewController = SKPlayerViewController(video: self.video)
         
         self.addChildViewController(self.playerViewController)
         

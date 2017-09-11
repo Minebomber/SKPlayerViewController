@@ -12,13 +12,13 @@ class SKVideo: NSObject {
 
     let title: String!
     let album: String!
-    let duration: Int!
+    let duration: Double!
     let streamUrl: String!
     let thumbnailUrl: String!
     
     let isLiveStream: Bool!
     
-    init(title: String, album: String, duration: Int, streamUrl: String, thumbnailUrl: String, isLiveStream: Bool) {
+    init(title: String, album: String, duration: Double, streamUrl: String, thumbnailUrl: String, isLiveStream: Bool) {
         self.title = title
         self.album = album
         self.duration = duration

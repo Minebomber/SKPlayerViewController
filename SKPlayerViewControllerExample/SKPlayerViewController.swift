@@ -19,6 +19,7 @@ class SKPlayerViewController: UIViewController, GCKSessionManagerListener {
     private var video: SKVideo!
     
     private var castMediaController = GCKUIMediaController()
+    private var castSession: GCKCastSession?
     
     weak var delegate: SKPlayerViewControllerDelegate!
     
@@ -251,37 +252,39 @@ class SKPlayerViewController: UIViewController, GCKSessionManagerListener {
     // MARK: - Chromecast Methods
     func sessionManager(_ sessionManager: GCKSessionManager, didStart session: GCKSession) {
         NSLog("sessionManager didStartSession: %@", session)
-        self.chromecastEnabled = true
+        self.switchChromecastToRemotePlayback()
     }
     
     func sessionManager(_ sessionManager: GCKSessionManager, didResumeSession session: GCKSession) {
         NSLog("sessionManager didResumeSession: %@", session)
-        self.chromecastEnabled = true
+        self.switchChromecastToRemotePlayback()
     }
     
     func sessionManager(_ sessionManager: GCKSessionManager, didEnd session: GCKSession, withError error: Error?) {
         print("session ended with error: \(String(describing: error))")
-        self.chromecastEnabled = false
+        self.switchChromecastToLocalPlayback()
     }
     
     func sessionManager(_ sessionManager: GCKSessionManager, didFailToStart session: GCKCastSession, withError error: Error) {
         print("session failed to start with error: \(error)")
     }
     
-    
-    private func mediaInfoFor(title: String, url: String, imageUrl: String, duration: Double) -> GCKMediaInformation {
+    private func generateMediaInformation() -> GCKMediaInformation {
         let metadata = GCKMediaMetadata(metadataType: .movie)
-        metadata.setString(title, forKey: kGCKMetadataKeyTitle)
+        metadata.setString(self.video.title, forKey: kGCKMetadataKeyTitle)
+        metadata.setString(self.video.album, forKey: kGCKMetadataKeyAlbumTitle)
         
-        let mediaInfo = GCKMediaInformation(contentID: url, streamType: self.videoIsHLS ? .live : .buffered, contentType: "video/mp4", metadata: metadata, streamDuration: duration, mediaTracks: nil, textTrackStyle: nil, customData: nil)
+        metadata.addImage(GCKImage(url: URL(string: self.video.thumbnailUrl)!, width: 480, height: 720))
+        
+        let mediaInfo = GCKMediaInformation(contentID: self.video.streamUrl, streamType: .live, contentType: "video/mp4", metadata: metadata, streamDuration: self.video.duration, mediaTracks: nil, textTrackStyle: nil, customData: nil)
         
         return mediaInfo
     }
     
-    private func playOnChromecast(url: String) {
+    private func playOnChromecastRemotely(url: String) {
         let castSession = GCKCastContext.sharedInstance().sessionManager.currentCastSession
         if castSession != nil {
-            castSession?.remoteMediaClient?.loadMedia(self.mediaInfoFor(title: "Test Title", url: url, imageUrl: "", duration: Double(CMTimeGetSeconds(self.player!.currentItem!.duration))), autoplay: true)
+            castSession?.remoteMediaClient?.loadMedia(self.generateMediaInformation(), autoplay: true)
         } else {
             NSLog("no cast session")
         }
@@ -290,21 +293,18 @@ class SKPlayerViewController: UIViewController, GCKSessionManagerListener {
     private func switchChromecastToLocalPlayback() {
         if self.chromecastEnabled == false { return }
         
-        var playPosition = 0.0
-        var paused = false
-        var ended = false
+        self.castSession?.remoteMediaClient?.remove(self as! GCKRemoteMediaClientListener)
+        self.castSession = nil
         
-        if self.chromecastEnabled == true {
-            
-            playPosition = self.castMediaController.lastKnownStreamPosition
-            paused = self.castMediaController.lastKnownPlayerState == .paused
-            ended = self.castMediaController.lastKnownPlayerState == .idle
-            
-            
-        }
+        self.chromecastEnabled = false
     }
     
     private func switchChromecastToRemotePlayback() {
+        if self.chromecastEnabled == true { return }
+        
+        self.castSession = self.sessionManager.currentCastSession
+        
+        
         
     }
     

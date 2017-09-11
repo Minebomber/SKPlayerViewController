@@ -71,6 +71,9 @@ class SKPlayerViewController: UIViewController, GCKSessionManagerListener {
     // Tap Gesture Recognizer for showing / hiding view
     private let hideTapGestureRecognizer = UITapGestureRecognizer()
     
+    // Tap Gesture for zooming the player (aspect fill -> aspect fit)
+    private let zoomTapGestureRecognizer = UITapGestureRecognizer()
+    
     // Dismiss/Present Stuff
     private var proxyView: UIView? // View to save position of embeded self (if needed)
     
@@ -200,6 +203,10 @@ class SKPlayerViewController: UIViewController, GCKSessionManagerListener {
         // Set target for tap gesture recognizer
         self.hideTapGestureRecognizer.addTarget(self, action: #selector(SKPlayerViewController.toggleControlsHidden(sender:)))
         self.view.addGestureRecognizer(self.hideTapGestureRecognizer)
+        
+        self.zoomTapGestureRecognizer.numberOfTapsRequired = 2
+        self.zoomTapGestureRecognizer.addTarget(self, action: #selector(SKPlayerViewController.toggleVideoGravityOfPlayer))
+        self.view.addGestureRecognizer(self.zoomTapGestureRecognizer)
         
         self.updateUIForHLSIfNeeded()
         
@@ -439,6 +446,16 @@ class SKPlayerViewController: UIViewController, GCKSessionManagerListener {
     }
     
     // MARK: - UI Update Functions
+    
+    @objc private func toggleVideoGravityOfPlayer() {
+        if self.playerLayer.videoGravity == AVLayerVideoGravityResizeAspect {
+            self.playerLayer.videoGravity = AVLayerVideoGravityResizeAspectFill
+            self.player?.externalPlaybackVideoGravity = AVLayerVideoGravityResizeAspectFill
+        } else {
+            self.playerLayer.videoGravity = AVLayerVideoGravityResizeAspect
+            self.player?.externalPlaybackVideoGravity = AVLayerVideoGravityResizeAspect
+        }
+    }
     
     private func updateUIForHLSIfNeeded() {
         if self.videoIsHLS {

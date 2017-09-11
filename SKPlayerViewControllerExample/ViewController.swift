@@ -10,8 +10,8 @@ import UIKit
 
 class ViewController: UIViewController, SKPlayerViewControllerDelegate {
     
-    let playUrlString = "http://qthttp.apple.com.edgesuite.net/1010qwoeiuryfg/sl.m3u8" // Random Video
-    //let playUrlString = "http://play.streamkit.tv/content/channel/sperantatv/vod/2017/9/semne_si_simboluri_0.player.m3u8" // SK Video
+    //let playUrlString = "https://bitdash-a.akamaihd.net/content/sintel/hls/playlist.m3u8" // Random Video
+    let playUrlString = "http://play.streamkit.tv/content/channel/sperantatv/vod/2017/9/semne_si_simboluri_0.player.m3u8" // SK Video
     //let playUrlString = "http://play.streamkit.tv/content/channel/sperantatv/live/sperantatv.player.m3u8" // SK Live
     
     let isLive = false

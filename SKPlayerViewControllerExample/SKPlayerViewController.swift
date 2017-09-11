@@ -120,13 +120,11 @@ class SKPlayerViewController: UIViewController, GCKSessionManagerListener {
     // MARK: Config
     let playImageName: String = "sk_play"
     let playColor: UIColor = UIColor.white
-    let playHighlightedColor: UIColor = UIColor.white
-    let playDisabledColor: UIColor = UIColor(red: 189/255, green: 189/255, blue: 189/255, alpha: 1.0)
+    let playHighlightedColor: UIColor = UIColor(white: 0.75, alpha: 1.0)
     
     let pauseImageName: String = "sk_pause"
     let pauseColor: UIColor = UIColor.white
-    let pauseHighlightedColor: UIColor = UIColor.white
-    let pauseDisabledColor: UIColor = UIColor(red: 189/255, green: 189/255, blue: 189/255, alpha: 1.0)
+    let pauseHighlightedColor: UIColor = UIColor(white: 0.75, alpha: 1.0)
     
     let airplayImageName: String = "sk_airplay"
     let airplayOffColor: UIColor = UIColor.white
@@ -381,9 +379,6 @@ class SKPlayerViewController: UIViewController, GCKSessionManagerListener {
         self.playPauseButton?.setImage(pauseHighlightedImage, for: .highlighted)
         self.playPauseButton?.setImage(pauseHighlightedImage, for: .selected)
         
-        let pauseDisabledImage = pauseBaseImage.maskWith(color: pauseDisabledColor)
-        self.playPauseButton?.setImage(pauseDisabledImage, for: .disabled)
-        
         self.player?.play()
     }
     
@@ -397,9 +392,6 @@ class SKPlayerViewController: UIViewController, GCKSessionManagerListener {
         let playHighlightedImage = playBaseImage.maskWith(color: playHighlightedColor)
         self.playPauseButton?.setImage(playHighlightedImage, for: .highlighted)
         self.playPauseButton?.setImage(playHighlightedImage, for: .selected)
-        
-        let playDisabledImage = playBaseImage.maskWith(color: playDisabledColor)
-        self.playPauseButton?.setImage(playDisabledImage, for: .disabled)
         
         self.player?.pause()
     }
@@ -462,16 +454,6 @@ class SKPlayerViewController: UIViewController, GCKSessionManagerListener {
             
             self.hlsLabel?.isHidden = true
         }
-    }
-    
-    private func disablePlayPauseButton() {
-        self.playPauseButton?.isEnabled = false
-        self.pausePlayer()
-    }
-    
-    private func enablePlayPauseButton() {
-        self.playPauseButton?.isEnabled = true
-        self.playPlayer()
     }
     
     private func updateTimeLabelsWith(elapsedTime: Float, duration: Float) {
@@ -572,7 +554,7 @@ class SKPlayerViewController: UIViewController, GCKSessionManagerListener {
     }
     
     private func showBufferingIndiciator() {
-        //self.disablePlayPauseButton()
+        
         DispatchQueue.main.async {
             self.playPauseButton?.isHidden = true
             
@@ -582,7 +564,7 @@ class SKPlayerViewController: UIViewController, GCKSessionManagerListener {
     }
     
     private func hideBufferingIndicator() {
-        //self.enablePlayPauseButton()
+        
         DispatchQueue.main.async {
             self.bufferingIndicator?.stopAnimating()
             

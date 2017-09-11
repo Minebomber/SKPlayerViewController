@@ -140,9 +140,7 @@ class SKPlayerViewController: UIViewController, GCKSessionManagerListener {
     let airplayHighlightedColor: UIColor = UIColor.white
     
     let chromecastImageName: String = "sk_chromecast"
-    let chromecastOffColor: UIColor = UIColor.white
-    let chromecastOnColor: UIColor = UIColor(red: 0/255, green: 122/255, blue: 255/255, alpha: 1.0)
-    let chromecastHighlightedColor: UIColor = UIColor.white
+    let chromecastTintColor: UIColor = UIColor.white
     
     let fullScreenImageName: String = "sk_fullscreen"
     let fullScreenColor: UIColor = UIColor.white
@@ -386,7 +384,7 @@ class SKPlayerViewController: UIViewController, GCKSessionManagerListener {
     private func addChromecastButton() {
         
         self.chromecastButton.frame = self.chromecastContainer!.bounds
-        self.chromecastButton.tintColor = self.chromecastOffColor
+        self.chromecastButton.tintColor = self.chromecastTintColor
         
         self.chromecastContainer?.addSubview(self.chromecastButton)
         self.chromecastContainer?.backgroundColor = UIColor.clear

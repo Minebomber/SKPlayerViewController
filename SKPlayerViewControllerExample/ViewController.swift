@@ -15,7 +15,7 @@ class ViewController: UIViewController, SKPlayerViewControllerDelegate {
     var hasPresentedPlayer = false
     
     let video = SKVideo(title: "Academica - 10 09 2017",
-                        album: "Academica", duration: 2972300,
+                        album: "Academica", duration: 2972.300,
                         streamUrl: "http://play.streamkit.tv/content/channel/sperantatv/vod/2017/9/academica_10_09_2017.player.m3u8",
                         thumbnailUrl: "http://space.streamkit.tv/hdd7/content/channel/sperantatv/vod/2017/9/academica_10_09_2017.mp4_medium.jpg",
                         isLiveStream: false)

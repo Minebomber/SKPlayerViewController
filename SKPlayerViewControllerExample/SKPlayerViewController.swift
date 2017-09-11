@@ -302,8 +302,19 @@ class SKPlayerViewController: UIViewController, GCKSessionManagerListener {
         
         self.castSession = self.sessionManager.currentCastSession
         
+        let builder = GCKMediaQueueItemBuilder()
+        builder.mediaInformation = self.generateMediaInformation()
+        builder.autoplay = true
+        builder.preloadTime = 0
         
+        let item = builder.build()
         
+        let playPosition = self.player?.currentItem?.currentTime()
+        
+        self.castSession?.remoteMediaClient?.queueLoad([item], start: 0, playPosition: CMTimeGetSeconds(playPosition!), repeatMode: .off, customData: nil)
+        
+        self.pausePlayer()
+        self.chromecastEnabled = true
     }
     
     // MARK: - UI Initial Config Functions

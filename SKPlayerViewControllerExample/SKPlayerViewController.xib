@@ -50,7 +50,7 @@
                             <state key="normal" image="sk_fullscreen"/>
                         </button>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="T7a-7x-9Ka">
-                            <rect key="frame" x="586" y="8" width="24" height="24"/>
+                            <rect key="frame" x="56" y="8" width="24" height="24"/>
                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             <constraints>
                                 <constraint firstAttribute="width" constant="24" id="5Pm-IS-E3Y"/>
@@ -58,7 +58,7 @@
                             </constraints>
                         </view>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vF7-t6-apG">
-                            <rect key="frame" x="546" y="8" width="24" height="24"/>
+                            <rect key="frame" x="16" y="8" width="24" height="24"/>
                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             <constraints>
                                 <constraint firstAttribute="width" constant="24" id="hII-G0-xjZ"/>
@@ -68,11 +68,11 @@
                     </subviews>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                     <constraints>
-                        <constraint firstItem="z0Q-UP-wAc" firstAttribute="leading" secondItem="T7a-7x-9Ka" secondAttribute="trailing" constant="16" id="ICg-Ni-8Ln"/>
                         <constraint firstAttribute="height" constant="40" id="JSe-oR-Boo"/>
                         <constraint firstItem="T7a-7x-9Ka" firstAttribute="leading" secondItem="vF7-t6-apG" secondAttribute="trailing" constant="16" id="RyL-tR-dBu"/>
                         <constraint firstItem="T7a-7x-9Ka" firstAttribute="centerY" secondItem="YIB-wu-6Rg" secondAttribute="centerY" id="fd8-FT-UEe"/>
                         <constraint firstItem="z0Q-UP-wAc" firstAttribute="centerY" secondItem="YIB-wu-6Rg" secondAttribute="centerY" id="jnU-Uu-UAV"/>
+                        <constraint firstItem="vF7-t6-apG" firstAttribute="leading" secondItem="YIB-wu-6Rg" secondAttribute="leading" constant="16" id="yOQ-vB-DLR"/>
                         <constraint firstItem="vF7-t6-apG" firstAttribute="centerY" secondItem="YIB-wu-6Rg" secondAttribute="centerY" id="yvX-uk-uJi"/>
                         <constraint firstAttribute="trailing" secondItem="z0Q-UP-wAc" secondAttribute="trailing" constant="8" id="zOu-bW-Jch"/>
                     </constraints>

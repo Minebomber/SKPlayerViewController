@@ -17,12 +17,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GCKLoggerDelegate {
     var secondWindow: UIWindow?
     
     let kDebugLoggingEnabled = true
-    let kReceiverAppID = "DC85EE7f"
+   //let kReceiverAppID = "DC85EE7f"
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         
-        let options = GCKCastOptions(receiverApplicationID: self.kReceiverAppID)
+        let options = GCKCastOptions(receiverApplicationID: kGCKMediaDefaultReceiverApplicationID)
         GCKCastContext.setSharedInstanceWith(options)
         GCKLogger.sharedInstance().delegate = self
         

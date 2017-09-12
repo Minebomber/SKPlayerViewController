@@ -274,7 +274,7 @@ class SKPlayerViewController: UIViewController, GCKSessionManagerListener {
         
         metadata.addImage(GCKImage(url: URL(string: self.video.thumbnailUrl)!, width: 480, height: 720))
         
-        let mediaInfo = GCKMediaInformation(contentID: self.video.streamUrl, streamType: .live, contentType: "video/mp4", metadata: metadata, streamDuration: self.video.duration, mediaTracks: nil, textTrackStyle: nil, customData: nil)
+        let mediaInfo = GCKMediaInformation(contentID: self.video.streamUrl, streamType: .buffered, contentType: "video/mp4", metadata: metadata, streamDuration: self.video.duration, mediaTracks: nil, textTrackStyle: nil, customData: nil)
         
         return mediaInfo
     }
@@ -403,11 +403,13 @@ class SKPlayerViewController: UIViewController, GCKSessionManagerListener {
     
     
     @objc private func playPause() {
-        let isPlaying = self.player!.rate > 0
-        if isPlaying {
-            self.pausePlayer()
-        } else {
-            self.playPlayer()
+        if self.player != nil {
+            let isPlaying = self.player!.rate > 0
+            if isPlaying {
+                self.pausePlayer()
+            } else {
+                self.playPlayer()
+            }
         }
     }
     
@@ -440,32 +442,38 @@ class SKPlayerViewController: UIViewController, GCKSessionManagerListener {
     }
     
     @objc private func sliderBeganTracking() {
-        self.playerRateBeforeSeek = self.player!.rate
-        self.pausePlayer()
+        if self.player != nil {
+            self.playerRateBeforeSeek = self.player!.rate
+            self.pausePlayer()
+        }
     }
     
     @objc private func sliderEndedTracking() {
-        let videoDuration = Float(CMTimeGetSeconds(self.player!.currentItem!.duration))
-        let elapsedTime = videoDuration * seekSlider!.value
-        
-        self.updateTimeLabelsWith(elapsedTime: elapsedTime, duration: videoDuration)
-        
-        let timescale = self.player!.currentItem!.asset.duration.timescale
-        
-        let newSeekTime = CMTimeMakeWithSeconds(Float64(elapsedTime), timescale)
-        self.stopPlayingAndSeekSmoothlyToTime(newChaseTime: newSeekTime)
+        if self.player != nil {
+            let videoDuration = Float(CMTimeGetSeconds(self.player!.currentItem!.duration))
+            let elapsedTime = videoDuration * seekSlider!.value
+            
+            self.updateTimeLabelsWith(elapsedTime: elapsedTime, duration: videoDuration)
+            
+            let timescale = self.player!.currentItem!.asset.duration.timescale
+            
+            let newSeekTime = CMTimeMakeWithSeconds(Float64(elapsedTime), timescale)
+            self.stopPlayingAndSeekSmoothlyToTime(newChaseTime: newSeekTime)
+        }
     }
     
     @objc private func sliderValueChanged() {
-        let videoDuration = Float(CMTimeGetSeconds(self.player!.currentItem!.duration))
-        let elapsedTime = videoDuration * seekSlider!.value
-        
-        self.updateTimeLabelsWith(elapsedTime: elapsedTime, duration: videoDuration)
-        
-        let timescale = self.player!.currentItem!.asset.duration.timescale
-        
-        let newSeekTime = CMTimeMakeWithSeconds(Float64(elapsedTime), timescale)
-        self.stopPlayingAndSeekSmoothlyToTime(newChaseTime: newSeekTime)
+        if self.player != nil {
+            let videoDuration = Float(CMTimeGetSeconds(self.player!.currentItem!.duration))
+            let elapsedTime = videoDuration * seekSlider!.value
+            
+            self.updateTimeLabelsWith(elapsedTime: elapsedTime, duration: videoDuration)
+            
+            let timescale = self.player!.currentItem!.asset.duration.timescale
+            
+            let newSeekTime = CMTimeMakeWithSeconds(Float64(elapsedTime), timescale)
+            self.stopPlayingAndSeekSmoothlyToTime(newChaseTime: newSeekTime)
+        }
     }
     
     @objc private func toggleFullScreen() {
@@ -727,21 +735,25 @@ class SKPlayerViewController: UIViewController, GCKSessionManagerListener {
         if self.airplayEnabled && self.chromecastEnabled {
             
             self.playerExternalState = .both
+            self.player?.isMuted = false
             return
             
         } else if self.airplayEnabled {
             
             self.playerExternalState = .airplay
+            self.player?.isMuted = false
             return
             
         } else if self.chromecastEnabled {
             
             self.playerExternalState = .chromecast
+            self.player?.isMuted = true
             return
             
         } else {
             
             self.playerExternalState = .none
+            self.player?.isMuted = false
             return
             
         }
@@ -808,20 +820,23 @@ class SKPlayerViewController: UIViewController, GCKSessionManagerListener {
     }
     
     private func actuallySeekToTime() {
-        self.isSeekInProgress = true
-        let seekTimeInProgress = self.chaseTime
-        self.player!.seek(to: seekTimeInProgress, toleranceBefore: kCMTimeZero, toleranceAfter: kCMTimeZero) { (completed) in
+        if self.player != nil {
             
-            if CMTimeCompare(seekTimeInProgress, self.chaseTime) == 0 {
-                self.isSeekInProgress = false
-                self.hideBufferingIndicator()
-                if self.playerRateBeforeSeek > 0 {
-                    self.playPlayer()
+            self.isSeekInProgress = true
+            let seekTimeInProgress = self.chaseTime
+            self.player!.seek(to: seekTimeInProgress, toleranceBefore: kCMTimeZero, toleranceAfter: kCMTimeZero) { (completed) in
+                
+                if CMTimeCompare(seekTimeInProgress, self.chaseTime) == 0 {
+                    self.isSeekInProgress = false
+                    self.hideBufferingIndicator()
+                    if self.playerRateBeforeSeek > 0 {
+                        self.playPlayer()
+                    }
+                } else {
+                    self.tryToSeekToChaseTime()
                 }
-            } else {
-                self.tryToSeekToChaseTime()
+                
             }
-            
         }
     }
     

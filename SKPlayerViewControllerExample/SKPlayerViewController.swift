@@ -12,7 +12,7 @@ import AVFoundation
 import MediaPlayer
 import GoogleCast
 
-class SKPlayerViewController: UIViewController, GCKSessionManagerListener {
+class SKPlayerViewController: UIViewController, GCKSessionManagerListener, GCKRemoteMediaClientListener {
     
     // MARK: - Variables
     
@@ -267,6 +267,10 @@ class SKPlayerViewController: UIViewController, GCKSessionManagerListener {
         print("session failed to start with error: \(error)")
     }
     
+    func remoteMediaClient(_ client: GCKRemoteMediaClient, didUpdate mediaStatus: GCKMediaStatus?) {
+        NSLog("didupdatemediastatus")
+    }
+    
     private func generateMediaInformation() -> GCKMediaInformation {
         let metadata = GCKMediaMetadata(metadataType: .movie)
         metadata.setString(self.video.title, forKey: kGCKMetadataKeyTitle)
@@ -291,7 +295,7 @@ class SKPlayerViewController: UIViewController, GCKSessionManagerListener {
     private func switchChromecastToLocalPlayback() {
         if self.chromecastEnabled == false { return }
         
-        self.castSession?.remoteMediaClient?.remove(self as! GCKRemoteMediaClientListener)
+        self.castSession?.remoteMediaClient?.remove(self)
         self.castSession = nil
         
         self.chromecastEnabled = false
@@ -309,12 +313,17 @@ class SKPlayerViewController: UIViewController, GCKSessionManagerListener {
         
         let item = builder.build()
         
-        let playPosition = self.player?.currentItem?.currentTime()
-        
-        self.castSession?.remoteMediaClient?.queueLoad([item], start: 0, playPosition: CMTimeGetSeconds(playPosition!), repeatMode: .off, customData: nil)
-        
+        if self.player != nil {
+            
+            let playPosition = self.player?.currentItem?.currentTime()
+            
+            self.castSession?.remoteMediaClient?.queueLoad([item], start: 0, playPosition: CMTimeGetSeconds(playPosition!), repeatMode: .off, customData: nil)
+            
+        }
         self.pausePlayer()
         self.chromecastEnabled = true
+        
+        self.castSession?.remoteMediaClient?.add(self)
     }
     
     // MARK: - UI Initial Config Functions

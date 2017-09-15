@@ -143,7 +143,6 @@ class SKPlayerViewController: UIViewController, GCKSessionManagerListener, GCKRe
     let airplayOnColor: UIColor = UIColor(red: 0/255, green: 122/255, blue: 255/255, alpha: 1.0)
     let airplayHighlightedColor: UIColor = UIColor.white
     
-    let chromecastImageName: String = "sk_chromecast"
     let chromecastTintColor: UIColor = UIColor.white
     
     let fullScreenImageName: String = "sk_fullscreen"

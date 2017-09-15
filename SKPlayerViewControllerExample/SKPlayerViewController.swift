@@ -232,7 +232,7 @@ class SKPlayerViewController: UIViewController, GCKSessionManagerListener, GCKRe
         self.setNeedsStatusBarAppearanceUpdate()
         
         // Setup the timer for updating slider and time labels
-        self.updateTimer = Timer.scheduledTimer(timeInterval: 0.8, target: self, selector: #selector(SKPlayerViewController.updateTimesInUI), userInfo: nil, repeats: true)        
+        self.updateTimer = Timer.scheduledTimer(timeInterval: 0.8, target: self, selector: #selector(SKPlayerViewController.updateTimesInUI), userInfo: nil, repeats: true)
         
         self.playPlayer() // Start playback
     }
@@ -299,10 +299,18 @@ class SKPlayerViewController: UIViewController, GCKSessionManagerListener, GCKRe
     private func switchChromecastToLocalPlayback() {
         if self.chromecastEnabled == false { return }
         
+        if self.playerExternalState == .chromecast {
+            let position = self.castMediaController.lastKnownStreamPosition
+            
+            let newTime = CMTimeMakeWithSeconds(position, self.player!.currentItem!.duration.timescale)
+            
+            self.chromecastEnabled = false
+            
+            self.stopPlayingAndSeekSmoothlyToTime(newChaseTime: newTime)
+        }
+        
         self.castSession?.remoteMediaClient?.remove(self)
         self.castSession = nil
-        
-        self.chromecastEnabled = false
     }
     
     private func switchChromecastToRemotePlayback() {
@@ -312,7 +320,7 @@ class SKPlayerViewController: UIViewController, GCKSessionManagerListener, GCKRe
         
         let builder = GCKMediaQueueItemBuilder()
         builder.mediaInformation = self.generateMediaInformation()
-        builder.autoplay = true
+        builder.autoplay = self.player!.rate > Float(0.0)
         builder.preloadTime = 0
         
         let item = builder.build()

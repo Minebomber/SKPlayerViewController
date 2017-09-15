@@ -764,9 +764,7 @@ class SKPlayerViewController: UIViewController, GCKSessionManagerListener, GCKRe
     }
     
     @objc private func wirelessRouteActiveChanged() {
-        
         self.airplayEnabled = self.volumeView.isWirelessRouteActive
-        
     }
     
     // MARK: - Utility Functions

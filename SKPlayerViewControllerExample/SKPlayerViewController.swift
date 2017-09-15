@@ -232,9 +232,7 @@ class SKPlayerViewController: UIViewController, GCKSessionManagerListener, GCKRe
         self.setNeedsStatusBarAppearanceUpdate()
         
         // Setup the timer for updating slider and time labels
-        self.updateTimer = Timer(timeInterval: 0.8, repeats: true, block: { (_) in
-            self.updateTimesInUI()
-        })
+        self.updateTimer = Timer.scheduledTimer(timeInterval: 0.8, target: self, selector: #selector(SKPlayerViewController.updateTimesInUI), userInfo: nil, repeats: true)        
         
         self.playPlayer() // Start playback
     }

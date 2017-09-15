@@ -205,6 +205,8 @@ class SKPlayerViewController: UIViewController, GCKSessionManagerListener, GCKRe
         self.zoomTapGestureRecognizer.addTarget(self, action: #selector(SKPlayerViewController.toggleVideoGravityOfPlayer))
         self.view.addGestureRecognizer(self.zoomTapGestureRecognizer)
         
+        self.hideTapGestureRecognizer.require(toFail: self.zoomTapGestureRecognizer)
+        
         self.updateUIForHLSIfNeeded()
         
         self.addExternalPlayerButtons()

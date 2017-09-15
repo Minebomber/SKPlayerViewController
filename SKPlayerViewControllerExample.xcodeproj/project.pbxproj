@@ -434,7 +434,7 @@
 				DEVELOPMENT_TEAM = ZM8WSG8UA8;
 				INFOPLIST_FILE = "$(SRCROOT)/SKPlayerViewControllerExample/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.mpo.ios.CustomAVPlayerTest;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mpo.ios.SKPlayerViewControllerExample;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 3.0;
 			};
@@ -448,7 +448,7 @@
 				DEVELOPMENT_TEAM = ZM8WSG8UA8;
 				INFOPLIST_FILE = "$(SRCROOT)/SKPlayerViewControllerExample/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.mpo.ios.CustomAVPlayerTest;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mpo.ios.SKPlayerViewControllerExample;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 3.0;
 			};

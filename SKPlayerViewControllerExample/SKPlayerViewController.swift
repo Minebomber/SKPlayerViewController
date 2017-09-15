@@ -16,6 +16,10 @@ class SKPlayerViewController: UIViewController, GCKSessionManagerListener, GCKRe
     
     // MARK: - Variables
     
+    private var updateTimer: Timer?
+    
+    private var isShowingControls = true
+    
     private var video: SKVideo!
     
     private var castMediaController = GCKUIMediaController()
@@ -192,17 +196,6 @@ class SKPlayerViewController: UIViewController, GCKSessionManagerListener, GCKRe
         
         NotificationCenter.default.addObserver(self, selector: #selector(SKPlayerViewController.updateLocalStatusBarFrameHeight), name: .UIApplicationDidChangeStatusBarFrame, object: nil)
         
-        // Setup the time observer
-        let timeInterval = CMTimeMakeWithSeconds(1.0, 10)
-        self.timeObserver = self.player?.addPeriodicTimeObserver(forInterval: timeInterval, queue: DispatchQueue.main, using: { (elapsedTime: CMTime) in
-            
-            if self.player != nil {
-                self.updateTimeLabelsWith(elapsedTime: Float(CMTimeGetSeconds(elapsedTime)), duration: Float(CMTimeGetSeconds(self.player!.currentItem!.duration)))
-                self.updateSeekSliderWith(elapsedTime: Float(CMTimeGetSeconds(elapsedTime)), duration: Float(CMTimeGetSeconds(self.player!.currentItem!.duration)))
-                self.setWidthOfTimeLabelsBasedOnDuration(Float(CMTimeGetSeconds(self.player!.currentItem!.duration)))
-            }
-        }) as AnyObject
-        
         self.setSeekSliderThumbImage()
         
         // Set target for tap gesture recognizer
@@ -238,6 +231,11 @@ class SKPlayerViewController: UIViewController, GCKSessionManagerListener, GCKRe
         
         self.setNeedsStatusBarAppearanceUpdate()
         
+        // Setup the timer for updating slider and time labels
+        self.updateTimer = Timer(timeInterval: 0.8, repeats: true, block: { (_) in
+            self.updateTimesInUI()
+        })
+        
         self.playPlayer() // Start playback
     }
     
@@ -268,7 +266,15 @@ class SKPlayerViewController: UIViewController, GCKSessionManagerListener, GCKRe
     }
     
     func remoteMediaClient(_ client: GCKRemoteMediaClient, didUpdate mediaStatus: GCKMediaStatus?) {
-        NSLog("didupdatemediastatus")
+        if mediaStatus?.playerState == .buffering || mediaStatus?.playerState == .loading {
+            if self.playerExternalState == .chromecast {
+                self.showBufferingIndiciator()
+            }
+        } else {
+            if self.playerExternalState == .chromecast {
+                self.hideBufferingIndicator()
+            }
+        }
     }
     
     private func generateMediaInformation() -> GCKMediaInformation {
@@ -500,6 +506,35 @@ class SKPlayerViewController: UIViewController, GCKSessionManagerListener, GCKRe
     
     // MARK: - UI Update Functions
     
+    @objc private func updateTimesInUI() {
+        
+        if self.player == nil { return }
+        
+        let elapsedTime = self.player!.currentTime()
+        
+        if self.playerExternalState != .chromecast {
+            
+            let elapsedTimeSeconds = Float(CMTimeGetSeconds(elapsedTime))
+            let duration = Float(CMTimeGetSeconds(self.player!.currentItem!.duration))
+            
+            self.updateTimeLabelsWith(elapsedTime: elapsedTimeSeconds, duration: duration)
+            self.updateSeekSliderWith(elapsedTime: elapsedTimeSeconds, duration: Float(CMTimeGetSeconds(self.player!.currentItem!.duration)))
+            self.setWidthOfTimeLabelsBasedOnDuration(duration)
+            
+        } else {
+            
+            if self.castSession != nil && self.castSession!.remoteMediaClient != nil {
+                
+                let elapsedTimeSeconds = Float(self.castSession!.remoteMediaClient!.approximateStreamPosition())
+                let duration = Float(CMTimeGetSeconds(self.player!.currentItem!.duration))
+                
+                self.updateTimeLabelsWith(elapsedTime: elapsedTimeSeconds, duration: duration)
+                self.updateSeekSliderWith(elapsedTime: elapsedTimeSeconds, duration: duration)
+                self.setWidthOfTimeLabelsBasedOnDuration(duration)
+            }
+        }
+    }
+    
     @objc private func toggleVideoGravityOfPlayer() {
         if self.playerLayer.videoGravity == AVLayerVideoGravityResizeAspect {
             self.playerLayer.videoGravity = AVLayerVideoGravityResizeAspectFill
@@ -584,6 +619,8 @@ class SKPlayerViewController: UIViewController, GCKSessionManagerListener, GCKRe
             self.statusBarBacking?.isHidden = true
             self.playPauseButton?.isHidden = true
         }
+        
+        self.isShowingControls = false
     }
     
     private func showControls() {
@@ -605,6 +642,8 @@ class SKPlayerViewController: UIViewController, GCKSessionManagerListener, GCKRe
                 self.playPauseButton?.alpha = 1
             }
         })
+        
+        self.isShowingControls = true
     }
     
     private func updateBufferingIndicatorIfNeeded() {
@@ -615,11 +654,11 @@ class SKPlayerViewController: UIViewController, GCKSessionManagerListener, GCKRe
             let bufferFull = self.player!.currentItem!.isPlaybackBufferFull
             let bufferEmpty = self.player!.currentItem!.isPlaybackBufferEmpty
             
-            if (likelyToKeepUp || bufferFull) && !self.bufferingIndicator!.isHidden {
+            if (likelyToKeepUp || bufferFull) && !self.bufferingIndicator!.isHidden && self.playerExternalState != .chromecast {
                 self.hideBufferingIndicator()
             }
             
-            if bufferEmpty && self.bufferingIndicator!.isHidden {
+            if bufferEmpty && self.bufferingIndicator!.isHidden && self.playerExternalState != .chromecast {
                 self.showBufferingIndiciator()
             }
         }
@@ -640,7 +679,9 @@ class SKPlayerViewController: UIViewController, GCKSessionManagerListener, GCKRe
         DispatchQueue.main.async {
             self.bufferingIndicator?.stopAnimating()
             
-            self.playPauseButton?.isHidden = false
+            if self.isShowingControls {
+                self.playPauseButton?.isHidden = false
+            }
         }
     }
     
@@ -694,7 +735,6 @@ class SKPlayerViewController: UIViewController, GCKSessionManagerListener, GCKRe
     
     private func dismissCompletely() {
         self.dismiss(animated: true) {
-            //NotificationCenter.removeObserver(self, forKeyPath: Notification.Name.UIApplicationDidChangeStatusBarFrame.rawValue)
             self.delegate.playerViewControllerDidDismissCompletely(self)
         }
     }
@@ -735,6 +775,8 @@ class SKPlayerViewController: UIViewController, GCKSessionManagerListener, GCKRe
         self.pausePlayer()
         self.playerLayer.removeFromSuperlayer()
         self.player = nil
+        
+        NotificationCenter.removeObserver(self, forKeyPath: Notification.Name.UIApplicationDidChangeStatusBarFrame.rawValue)
     }
     
     private func updateStateForIndependentExternalVars() {
@@ -807,7 +849,10 @@ class SKPlayerViewController: UIViewController, GCKSessionManagerListener, GCKRe
     
     // Seeking stuff: https://developer.apple.com/library/content/qa/qa1820/_index.html
     private func stopPlayingAndSeekSmoothlyToTime(newChaseTime: CMTime) {
-        self.showBufferingIndiciator()
+        if self.playerExternalState != .chromecast {
+            self.showBufferingIndiciator()
+        }
+        
         self.pausePlayer()
         
         if CMTimeCompare(newChaseTime, self.chaseTime) != 0 {
@@ -837,7 +882,9 @@ class SKPlayerViewController: UIViewController, GCKSessionManagerListener, GCKRe
                 
                 if CMTimeCompare(seekTimeInProgress, self.chaseTime) == 0 {
                     self.isSeekInProgress = false
-                    self.hideBufferingIndicator()
+                    if self.playerExternalState != .chromecast  {
+                        self.hideBufferingIndicator()
+                    }
                     if self.playerRateBeforeSeek > 0 {
                         self.playPlayer()
                     }
@@ -882,9 +929,11 @@ class SKPlayerViewController: UIViewController, GCKSessionManagerListener, GCKRe
     }
     
     deinit {
+        // clear timer
+        self.updateTimer?.invalidate()
+        self.updateTimer = nil
         
-        self.player?.removeTimeObserver(self.timeObserver)
-        
+        // remove observers
         self.player?.removeObserver(self, forKeyPath: kPlaybackLikelyToKeepUp)
         self.player?.removeObserver(self, forKeyPath: kPlaybackBufferFull)
         self.player?.removeObserver(self, forKeyPath: kPlaybackBufferEmpty)

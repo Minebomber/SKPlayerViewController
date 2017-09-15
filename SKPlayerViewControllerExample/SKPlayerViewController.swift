@@ -440,6 +440,10 @@ class SKPlayerViewController: UIViewController, GCKSessionManagerListener, GCKRe
         self.playPauseButton?.setImage(pauseHighlightedImage, for: .selected)
         
         self.player?.play()
+        
+        if self.chromecastEnabled {
+            self.castSession?.remoteMediaClient?.play()
+        }
     }
     
     private func pausePlayer() {
@@ -454,6 +458,10 @@ class SKPlayerViewController: UIViewController, GCKSessionManagerListener, GCKRe
         self.playPauseButton?.setImage(playHighlightedImage, for: .selected)
         
         self.player?.pause()
+        
+        if self.chromecastEnabled {
+            self.castSession?.remoteMediaClient?.pause()
+        }
     }
     
     @objc private func sliderBeganTracking() {

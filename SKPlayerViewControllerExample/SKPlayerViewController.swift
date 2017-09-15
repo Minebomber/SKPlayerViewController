@@ -901,9 +901,7 @@ class SKPlayerViewController: UIViewController, GCKSessionManagerListener, GCKRe
             
             // Also seek in chromecast if needed
             if self.castSession != nil {
-                
-                self.castSession!.remoteMediaClient?.seek(toTimeInterval: CMTimeGetSeconds(self.player!.currentTime()) * 1000, resumeState: .play)
-                
+                self.castSession!.remoteMediaClient?.seek(toTimeInterval: CMTimeGetSeconds(self.player!.currentTime()) * 1000, resumeState: .unchanged)
             }
         }
     }

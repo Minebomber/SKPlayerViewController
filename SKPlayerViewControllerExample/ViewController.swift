@@ -68,7 +68,6 @@ class ViewController: UIViewController, SKPlayerViewControllerDelegate {
     func playerViewControllerDidDismissCompletely(_ controller: SKPlayerViewController) {
         self.playerViewController.deallocPlayer()
         self.playerViewController = nil
-        print(self.playerViewController)
     }
     
     @IBAction func presentPlayerAction() {

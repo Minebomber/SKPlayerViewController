@@ -10,13 +10,13 @@ import UIKit
 
 class SKVideo: NSObject {
 
-    let title: String!
-    let album: String!
-    let duration: Double!
-    let streamUrl: String!
-    let thumbnailUrl: String!
+    var title: String!
+    var album: String!
+    var duration: Double!
+    var streamUrl: String!
+    var thumbnailUrl: String!
     
-    let isLiveStream: Bool!
+    var isLiveStream: Bool!
     
     init(title: String, album: String, duration: Double, streamUrl: String, thumbnailUrl: String, isLiveStream: Bool) {
         self.title = title

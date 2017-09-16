@@ -227,10 +227,6 @@ class SKPlayerViewController: UIViewController, GCKSessionManagerListener, GCKRe
         if self.sessionManager.connectionState == .connected || self.sessionManager.connectionState == GCKConnectionState.connecting {
             self.sessionManager.endSessionAndStopCasting(true)
         }
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
         
         if self.parent != nil && self.presentingViewController == nil {
             self.isEmbeded = true
@@ -274,8 +270,8 @@ class SKPlayerViewController: UIViewController, GCKSessionManagerListener, GCKRe
         print("session failed to start with error: \(error)")
     }
     
-    func remoteMediaClient(_ client: GCKRemoteMediaClient, didUpdate mediaStatus: GCKMediaStatus?) {
-        if mediaStatus?.playerState == .buffering || mediaStatus?.playerState == .loading {
+    func remoteMediaClient(_ client: GCKRemoteMediaClient, didUpdate mediaStatus: GCKMediaStatus) {
+        if mediaStatus.playerState == .buffering || mediaStatus.playerState == .loading {
             if self.playerExternalState == .chromecast {
                 self.showBufferingIndiciator()
             }
@@ -317,7 +313,9 @@ class SKPlayerViewController: UIViewController, GCKSessionManagerListener, GCKRe
             
             self.chromecastEnabled = false
             
-            self.stopPlayingAndSeekSmoothlyToTime(newChaseTime: newTime)
+            if newTime.isValid { // Time might not be valid if livestream
+                self.stopPlayingAndSeekSmoothlyToTime(newChaseTime: newTime)
+            }
         }
         
         self.castSession?.remoteMediaClient?.remove(self)
@@ -515,7 +513,8 @@ class SKPlayerViewController: UIViewController, GCKSessionManagerListener, GCKRe
     }
     
     @objc private func toggleFullScreen() {
-        
+        print("toggleFullscreen")
+        print("Embed: \(self.isEmbeded), Fullscreen: \(self.isFullscreen)")
         if isEmbeded {
             if isFullscreen {
                 self.exitFullScreenToEmbed()
@@ -713,6 +712,8 @@ class SKPlayerViewController: UIViewController, GCKSessionManagerListener, GCKRe
     // Fullscreen stuff.
     
     private func enterFullScreenFromEmbed() {
+        
+        print("enter from embed")
         
         self.proxyView = UIView(frame: self.view.frame)
         self.proxyView?.isHidden = true

@@ -152,6 +152,12 @@ class SKPlayerViewController: UIViewController, GCKSessionManagerListener, GCKRe
     let normalScreenColor: UIColor = UIColor.white
     let normalScreenHighlightedColor: UIColor = UIColor.white
     
+    let controlsFadeTime: TimeInterval = 0.25
+    let controlsFadeAnimationCurve: UIViewAnimationOptions = .curveLinear
+    
+    let fullscreenTransitionTime: TimeInterval = 0.25
+    let fullscreenTransitionAnimationCurve: UIViewAnimationOptions = .curveEaseOut
+    
     // MARK: -
     
     // MARK: Inits
@@ -335,7 +341,6 @@ class SKPlayerViewController: UIViewController, GCKSessionManagerListener, GCKRe
             let playPosition = self.player?.currentItem?.currentTime()
             
             self.castSession?.remoteMediaClient?.queueLoad([item], start: 0, playPosition: CMTimeGetSeconds(playPosition!), repeatMode: .off, customData: nil)
-            
         }
         self.pausePlayer()
         self.chromecastEnabled = true
@@ -626,7 +631,8 @@ class SKPlayerViewController: UIViewController, GCKSessionManagerListener, GCKRe
     }
     
     private func hideControls() {
-        UIView.animate(withDuration: 0.25, animations: {
+        
+        UIView.animate(withDuration: self.controlsFadeTime, delay: 0.0, options: self.controlsFadeAnimationCurve, animations: {
             self.topBarContainer?.alpha = 0
             self.bottomBarContainer?.alpha = 0
             self.statusBarBacking?.alpha = 0
@@ -642,6 +648,7 @@ class SKPlayerViewController: UIViewController, GCKSessionManagerListener, GCKRe
     }
     
     private func showControls() {
+        
         self.topBarContainer?.isHidden = false
         self.bottomBarContainer?.isHidden = false
         self.statusBarBacking?.isHidden = false
@@ -651,7 +658,7 @@ class SKPlayerViewController: UIViewController, GCKSessionManagerListener, GCKRe
             self.playPauseButton?.isHidden = false
         }
         
-        UIView.animate(withDuration: 0.25, animations: {
+        UIView.animate(withDuration: self.controlsFadeTime, delay: 0.0, options: self.controlsFadeAnimationCurve, animations: {
             self.topBarContainer?.alpha = 1
             self.bottomBarContainer?.alpha = 1
             self.statusBarBacking?.alpha = 1
@@ -659,7 +666,7 @@ class SKPlayerViewController: UIViewController, GCKSessionManagerListener, GCKRe
             if self.bufferingIndicator!.isHidden {
                 self.playPauseButton?.alpha = 1
             }
-        })
+        }, completion: nil)
         
         self.isShowingControls = true
     }
@@ -719,11 +726,11 @@ class SKPlayerViewController: UIViewController, GCKSessionManagerListener, GCKRe
         
         self.isFullscreen = true
         
-        UIView.animate(withDuration: 0.25) {
+        UIView.animate(withDuration: self.fullscreenTransitionTime, delay: 0.0, options: self.fullscreenTransitionAnimationCurve, animations: {
             self.view.frame = self.view.window!.bounds
             self.view.layoutIfNeeded()
             self.setNeedsStatusBarAppearanceUpdate()
-        }
+        }, completion: nil)
     }
     
     private func exitFullScreenToEmbed() {
@@ -736,7 +743,7 @@ class SKPlayerViewController: UIViewController, GCKSessionManagerListener, GCKRe
         
         self.isFullscreen = false
         
-        UIView.animate(withDuration: 0.25, animations: { 
+        UIView.animate(withDuration: self.fullscreenTransitionTime, delay: 0.0, options: self.fullscreenTransitionAnimationCurve, animations: { 
             self.view.frame = frame!
             self.view.layoutIfNeeded()
             self.setNeedsStatusBarAppearanceUpdate()

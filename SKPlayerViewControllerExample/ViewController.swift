@@ -44,7 +44,7 @@ class ViewController: UIViewController, SKPlayerViewControllerDelegate {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         //self.presentPlayer()
-        //        self.showPlayerInView()
+        self.showPlayerInView()
     }
     
     func presentPlayer() {

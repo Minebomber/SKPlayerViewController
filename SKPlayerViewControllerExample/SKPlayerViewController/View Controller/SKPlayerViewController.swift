@@ -270,8 +270,8 @@ class SKPlayerViewController: UIViewController, GCKSessionManagerListener, GCKRe
         print("session failed to start with error: \(error)")
     }
     
-    func remoteMediaClient(_ client: GCKRemoteMediaClient, didUpdate mediaStatus: GCKMediaStatus) {
-        if mediaStatus.playerState == .buffering || mediaStatus.playerState == .loading {
+    func remoteMediaClient(_ client: GCKRemoteMediaClient, didUpdate mediaStatus: GCKMediaStatus?) {
+        if mediaStatus?.playerState == .buffering || mediaStatus?.playerState == .loading {
             if self.playerExternalState == .chromecast {
                 self.showBufferingIndiciator()
             }

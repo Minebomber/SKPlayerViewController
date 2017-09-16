@@ -43,14 +43,14 @@
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="YIB-wu-6Rg">
-                    <rect key="frame" x="0.0" y="0.0" width="667" height="40"/>
+                    <rect key="frame" x="0.0" y="0.0" width="667" height="44"/>
                     <subviews>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="z0Q-UP-wAc">
-                            <rect key="frame" x="626" y="3.5" width="33" height="33"/>
+                            <rect key="frame" x="626" y="5.5" width="33" height="33"/>
                             <state key="normal" image="sk_fullscreen"/>
                         </button>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="T7a-7x-9Ka">
-                            <rect key="frame" x="56" y="8" width="24" height="24"/>
+                            <rect key="frame" x="56" y="10" width="24" height="24"/>
                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             <constraints>
                                 <constraint firstAttribute="width" constant="24" id="5Pm-IS-E3Y"/>
@@ -58,7 +58,7 @@
                             </constraints>
                         </view>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vF7-t6-apG">
-                            <rect key="frame" x="16" y="8" width="24" height="24"/>
+                            <rect key="frame" x="16" y="10" width="24" height="24"/>
                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             <constraints>
                                 <constraint firstAttribute="width" constant="24" id="hII-G0-xjZ"/>
@@ -68,7 +68,7 @@
                     </subviews>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                     <constraints>
-                        <constraint firstAttribute="height" constant="40" id="JSe-oR-Boo"/>
+                        <constraint firstAttribute="height" constant="44" id="JSe-oR-Boo"/>
                         <constraint firstItem="T7a-7x-9Ka" firstAttribute="leading" secondItem="vF7-t6-apG" secondAttribute="trailing" constant="16" id="RyL-tR-dBu"/>
                         <constraint firstItem="T7a-7x-9Ka" firstAttribute="centerY" secondItem="YIB-wu-6Rg" secondAttribute="centerY" id="fd8-FT-UEe"/>
                         <constraint firstItem="z0Q-UP-wAc" firstAttribute="centerY" secondItem="YIB-wu-6Rg" secondAttribute="centerY" id="jnU-Uu-UAV"/>

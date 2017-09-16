@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12121" systemVersion="16G29" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12121" systemVersion="16G29" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="IgT-xq-hKo">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
@@ -10,10 +10,10 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--View Controller-->
+        <!--Home-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="SKPlayerViewControllerExample" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="BYZ-38-t0r" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="y3c-jy-aDJ"/>
                         <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
@@ -22,35 +22,133 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7xI-GX-ek8">
-                                <rect key="frame" x="0.0" y="20" width="375" height="200"/>
-                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" secondItem="7xI-GX-ek8" secondAttribute="height" multiplier="375:200" id="1BK-WK-clC"/>
-                                </constraints>
-                            </view>
-                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ox9-uX-DIr">
-                                <rect key="frame" x="156" y="613" width="63" height="34"/>
-                                <state key="normal" title="Present"/>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="ony-Eq-P7y">
+                                <rect key="frame" x="67.5" y="235.5" width="240" height="196"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="IUs-rF-sUP">
+                                        <rect key="frame" x="0.0" y="0.0" width="240" height="34"/>
+                                        <state key="normal" title="Embedded Player Example"/>
+                                        <connections>
+                                            <segue destination="jgU-zC-W27" kind="show" id="zAd-0C-0IK"/>
+                                        </connections>
+                                    </button>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="AIz-1C-dMz">
+                                        <rect key="frame" x="0.0" y="34" width="240" height="128"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="128" id="UUf-SY-0fd"/>
+                                        </constraints>
+                                    </view>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Qb9-s5-NBL">
+                                        <rect key="frame" x="0.0" y="162" width="240" height="34"/>
+                                        <state key="normal" title="Presented Player Example"/>
+                                        <connections>
+                                            <segue destination="Ob8-PZ-AEv" kind="show" id="Tbi-oF-6Ba"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                            </stackView>
+                        </subviews>
+                        <color key="backgroundColor" red="0.0" green="0.50196081400000003" blue="0.50196081400000003" alpha="1" colorSpace="calibratedRGB"/>
+                        <constraints>
+                            <constraint firstItem="ony-Eq-P7y" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="6MH-ol-VVH"/>
+                            <constraint firstItem="ony-Eq-P7y" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="TGb-k9-cGJ"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" title="Home" id="oHA-Vp-GDJ"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="962.39999999999998" y="33.733133433283363"/>
+        </scene>
+        <!--Presented-->
+        <scene sceneID="utF-DN-8FV">
+            <objects>
+                <viewController id="Ob8-PZ-AEv" customClass="PresentedViewController" customModule="SKPlayerViewControllerExample" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="A0K-LI-LEV"/>
+                        <viewControllerLayoutGuide type="bottom" id="uwr-N0-8tN"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="ttH-0r-oZX">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Quz-GT-U8j">
+                                <rect key="frame" x="58" y="613" width="258" height="34"/>
+                                <state key="normal" title="Present SKPlayerViewController"/>
                                 <connections>
-                                    <action selector="presentPlayerAction" destination="BYZ-38-t0r" eventType="touchUpInside" id="GeH-hp-Uge"/>
+                                    <action selector="presentPlayer" destination="Ob8-PZ-AEv" eventType="touchUpInside" id="qQg-pv-SMe"/>
                                 </connections>
                             </button>
                         </subviews>
                         <color key="backgroundColor" red="0.0" green="0.50196081400000003" blue="0.50196081400000003" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
-                            <constraint firstItem="7xI-GX-ek8" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" id="Ek2-8O-iHk"/>
-                            <constraint firstItem="Ox9-uX-DIr" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="Wlp-Tl-fAf"/>
-                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="Ox9-uX-DIr" secondAttribute="bottom" constant="20" id="h7e-1V-Us3"/>
-                            <constraint firstAttribute="trailing" secondItem="7xI-GX-ek8" secondAttribute="trailing" id="tUv-JZ-2l1"/>
-                            <constraint firstItem="7xI-GX-ek8" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="vyq-Zx-gPj"/>
+                            <constraint firstItem="Quz-GT-U8j" firstAttribute="centerX" secondItem="ttH-0r-oZX" secondAttribute="centerX" id="xXR-IA-VUd"/>
+                            <constraint firstItem="uwr-N0-8tN" firstAttribute="top" secondItem="Quz-GT-U8j" secondAttribute="bottom" constant="20" id="zdi-ku-qct"/>
                         </constraints>
                     </view>
+                    <navigationItem key="navigationItem" title="Presented" id="Q08-xV-AIe"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="C6C-t2-gHm" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2068" y="471.8140929535233"/>
+        </scene>
+        <!--Embedded-->
+        <scene sceneID="b5e-kg-TbD">
+            <objects>
+                <viewController id="jgU-zC-W27" customClass="EmbeddedViewController" customModule="SKPlayerViewControllerExample" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="GYh-WK-mQE"/>
+                        <viewControllerLayoutGuide type="bottom" id="Mcf-cR-guB"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="1SC-I8-gsp">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Of0-Ag-5Lx">
+                                <rect key="frame" x="0.0" y="64" width="375" height="200"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" secondItem="Of0-Ag-5Lx" secondAttribute="height" multiplier="375:200" id="2ax-he-4Sh"/>
+                                </constraints>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" red="0.0" green="0.50196081400000003" blue="0.50196081400000003" alpha="1" colorSpace="calibratedRGB"/>
+                        <constraints>
+                            <constraint firstItem="Of0-Ag-5Lx" firstAttribute="leading" secondItem="1SC-I8-gsp" secondAttribute="leading" id="ldk-pc-4yv"/>
+                            <constraint firstItem="Of0-Ag-5Lx" firstAttribute="top" secondItem="GYh-WK-mQE" secondAttribute="bottom" id="vd8-sy-xJj"/>
+                            <constraint firstAttribute="trailing" secondItem="Of0-Ag-5Lx" secondAttribute="trailing" id="xrM-A6-8rp"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" title="Embedded" id="44V-on-PhS"/>
                     <connections>
-                        <outlet property="playerContainer" destination="7xI-GX-ek8" id="ZvN-qf-Vy6"/>
+                        <outlet property="playerContainerView" destination="Of0-Ag-5Lx" id="P7S-OF-iqx"/>
                     </connections>
                 </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="aUr-IZ-grR" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2068" y="-447.52623688155927"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="lIG-6j-IF4">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="IgT-xq-hKo" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="rUR-cs-p8Y">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="barTintColor" red="0.0" green="0.50196081400000003" blue="0.50196081400000003" alpha="1" colorSpace="calibratedRGB"/>
+                        <textAttributes key="titleTextAttributes">
+                            <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        </textAttributes>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="BYZ-38-t0r" kind="relationship" relationship="rootViewController" id="fP5-6O-SdF"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="iRG-IR-Edx" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="23.199999999999999" y="33.733133433283363"/>
         </scene>

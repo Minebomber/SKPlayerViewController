@@ -12,7 +12,6 @@
 		4DBEA8231F54D95A00C143EF /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DBEA8221F54D95A00C143EF /* AppDelegate.swift */; };
 		4DBEA8281F54D95A00C143EF /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4DBEA8261F54D95A00C143EF /* Main.storyboard */; };
 		4DBEA82D1F54D95A00C143EF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4DBEA82B1F54D95A00C143EF /* LaunchScreen.storyboard */; };
-		4DBEA83A1F55041A00C143EF /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DBEA8391F55041A00C143EF /* ViewController.swift */; };
 		4DD3D6EC1F6CD485005D2C3B /* SKAssets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4DD3D6DE1F6CD485005D2C3B /* SKAssets.xcassets */; };
 		4DD3D6ED1F6CD485005D2C3B /* SKPlayerViewControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DD3D6E01F6CD485005D2C3B /* SKPlayerViewControllerDelegate.swift */; };
 		4DD3D6EE1F6CD485005D2C3B /* SKPlayerOverlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DD3D6E21F6CD485005D2C3B /* SKPlayerOverlayView.swift */; };
@@ -22,6 +21,8 @@
 		4DD3D6F21F6CD485005D2C3B /* SKVideo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DD3D6E81F6CD485005D2C3B /* SKVideo.swift */; };
 		4DD3D6F31F6CD485005D2C3B /* SKPlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DD3D6EA1F6CD485005D2C3B /* SKPlayerViewController.swift */; };
 		4DD3D6F41F6CD485005D2C3B /* SKPlayerViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4DD3D6EB1F6CD485005D2C3B /* SKPlayerViewController.xib */; };
+		4DD3D6F71F6CD830005D2C3B /* EmbeddedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DD3D6F61F6CD830005D2C3B /* EmbeddedViewController.swift */; };
+		4DD3D6F91F6CD838005D2C3B /* PresentedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DD3D6F81F6CD838005D2C3B /* PresentedViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -31,7 +32,6 @@
 		4DBEA8271F54D95A00C143EF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		4DBEA82C1F54D95A00C143EF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		4DBEA82E1F54D95A00C143EF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		4DBEA8391F55041A00C143EF /* ViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		4DD3D6DE1F6CD485005D2C3B /* SKAssets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = SKAssets.xcassets; sourceTree = "<group>"; };
 		4DD3D6E01F6CD485005D2C3B /* SKPlayerViewControllerDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SKPlayerViewControllerDelegate.swift; sourceTree = "<group>"; };
 		4DD3D6E21F6CD485005D2C3B /* SKPlayerOverlayView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SKPlayerOverlayView.swift; sourceTree = "<group>"; };
@@ -41,6 +41,8 @@
 		4DD3D6E81F6CD485005D2C3B /* SKVideo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SKVideo.swift; sourceTree = "<group>"; };
 		4DD3D6EA1F6CD485005D2C3B /* SKPlayerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SKPlayerViewController.swift; sourceTree = "<group>"; };
 		4DD3D6EB1F6CD485005D2C3B /* SKPlayerViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SKPlayerViewController.xib; sourceTree = "<group>"; };
+		4DD3D6F61F6CD830005D2C3B /* EmbeddedViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EmbeddedViewController.swift; sourceTree = "<group>"; };
+		4DD3D6F81F6CD838005D2C3B /* PresentedViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PresentedViewController.swift; sourceTree = "<group>"; };
 		A400805C56EF821B148E07BA /* Pods-SKPlayerViewControllerExample.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SKPlayerViewControllerExample.release.xcconfig"; path = "Pods/Target Support Files/Pods-SKPlayerViewControllerExample/Pods-SKPlayerViewControllerExample.release.xcconfig"; sourceTree = "<group>"; };
 		B2AA382BC6C8FB08C3604C87 /* Pods_SKPlayerViewControllerExample.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SKPlayerViewControllerExample.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		DFF6817F1DC57C480ED49B87 /* Pods-SKPlayerViewControllerExample.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SKPlayerViewControllerExample.debug.xcconfig"; path = "Pods/Target Support Files/Pods-SKPlayerViewControllerExample/Pods-SKPlayerViewControllerExample.debug.xcconfig"; sourceTree = "<group>"; };
@@ -89,7 +91,7 @@
 			children = (
 				4DD3D6DC1F6CD485005D2C3B /* SKPlayerViewController */,
 				4DBEA8221F54D95A00C143EF /* AppDelegate.swift */,
-				4DBEA8391F55041A00C143EF /* ViewController.swift */,
+				4DD3D6F51F6CD813005D2C3B /* View Controllers */,
 				4DBEA8261F54D95A00C143EF /* Main.storyboard */,
 				4DBEA82B1F54D95A00C143EF /* LaunchScreen.storyboard */,
 				4D598D2C1F5E05A7007B0DAE /* Assets.xcassets */,
@@ -160,6 +162,15 @@
 				4DD3D6EB1F6CD485005D2C3B /* SKPlayerViewController.xib */,
 			);
 			path = "View Controller";
+			sourceTree = "<group>";
+		};
+		4DD3D6F51F6CD813005D2C3B /* View Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				4DD3D6F61F6CD830005D2C3B /* EmbeddedViewController.swift */,
+				4DD3D6F81F6CD838005D2C3B /* PresentedViewController.swift */,
+			);
+			name = "View Controllers";
 			sourceTree = "<group>";
 		};
 		FDE511A928B7DCFA2BD584A9 /* Pods */ = {
@@ -301,11 +312,12 @@
 				4DD3D6F11F6CD485005D2C3B /* SKGlobals.swift in Sources */,
 				4DD3D6F31F6CD485005D2C3B /* SKPlayerViewController.swift in Sources */,
 				4DD3D6EE1F6CD485005D2C3B /* SKPlayerOverlayView.swift in Sources */,
-				4DBEA83A1F55041A00C143EF /* ViewController.swift in Sources */,
+				4DD3D6F91F6CD838005D2C3B /* PresentedViewController.swift in Sources */,
 				4DD3D6F01F6CD485005D2C3B /* SKExtensions.swift in Sources */,
 				4DD3D6ED1F6CD485005D2C3B /* SKPlayerViewControllerDelegate.swift in Sources */,
 				4DBEA8231F54D95A00C143EF /* AppDelegate.swift in Sources */,
 				4DD3D6F21F6CD485005D2C3B /* SKVideo.swift in Sources */,
+				4DD3D6F71F6CD830005D2C3B /* EmbeddedViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

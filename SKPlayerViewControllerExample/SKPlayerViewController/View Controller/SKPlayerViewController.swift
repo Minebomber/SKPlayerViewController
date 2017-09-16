@@ -803,7 +803,7 @@ class SKPlayerViewController: UIViewController, GCKSessionManagerListener, GCKRe
         self.playerLayer.removeFromSuperlayer()
         self.player = nil
         
-        NotificationCenter.removeObserver(self, forKeyPath: Notification.Name.UIApplicationDidChangeStatusBarFrame.rawValue)
+        NotificationCenter.default.removeObserver(self)
     }
     
     private func updateStateForIndependentExternalVars() {

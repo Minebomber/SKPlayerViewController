@@ -138,10 +138,9 @@ class SKPlayerViewController: UIViewController, GCKSessionManagerListener, GCKRe
     let pauseColor: UIColor = UIColor.white
     let pauseHighlightedColor: UIColor = UIColor(white: 0.75, alpha: 1.0)
     
-    let airplayImageName: String = "sk_airplay"
-    let airplayOffColor: UIColor = UIColor.white
-    let airplayOnColor: UIColor = UIColor(red: 0/255, green: 122/255, blue: 255/255, alpha: 1.0)
-    let airplayHighlightedColor: UIColor = UIColor.white
+    let airplayOffImageName: String = "sk_airplay_off"
+    let airplayOnImageName: String = "sk_airplay_on"
+    let airplayHighlightedColor: UIColor = UIColor(white: 0.75, alpha: 1.0)
     
     let chromecastTintColor: UIColor = UIColor.white
     
@@ -217,6 +216,11 @@ class SKPlayerViewController: UIViewController, GCKSessionManagerListener, GCKRe
         // Add top layout guide constraint
         let topGuide = self.topLayoutGuide
         self.view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:[topGuide]-0-[topView]", options: NSLayoutFormatOptions(rawValue: 0), metrics: nil, views: ["topGuide" : topGuide, "topView" : self.topBarContainer!]))
+        
+        // Disconnect if new video (to prevent wierd glitches with different videos)
+        if self.sessionManager.connectionState == .connected || self.sessionManager.connectionState == GCKConnectionState.connecting {
+            self.sessionManager.endSessionAndStopCasting(true)
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -398,14 +402,13 @@ class SKPlayerViewController: UIViewController, GCKSessionManagerListener, GCKRe
         self.volumeView.frame = self.airplayContainer!.bounds
         
         // Customization
-        let airplayBaseImage = UIImage(named: airplayImageName)
-        let airplayOffImage = airplayBaseImage?.maskWith(color: airplayOffColor)
+        let airplayOffImage = UIImage(named: airplayOffImageName)
         self.volumeView.setRouteButtonImage(airplayOffImage, for: .normal)
         
-        let airplayHighlightedImage = airplayBaseImage?.maskWith(color: airplayHighlightedColor)
+        let airplayHighlightedImage = airplayOffImage?.maskWith(color: airplayHighlightedColor)
         self.volumeView.setRouteButtonImage(airplayHighlightedImage, for: .highlighted)
         
-        let airplayOnImage = airplayBaseImage?.maskWith(color: airplayOnColor)
+        let airplayOnImage = UIImage(named: airplayOnImageName)
         self.volumeView.setRouteButtonImage(airplayOnImage, for: .selected)
         
         self.airplayContainer?.addSubview(self.volumeView)
@@ -780,6 +783,17 @@ class SKPlayerViewController: UIViewController, GCKSessionManagerListener, GCKRe
     
     @objc private func wirelessRouteActiveChanged() {
         self.airplayEnabled = self.volumeView.isWirelessRouteActive
+        
+        DispatchQueue.main.async {
+            if self.airplayEnabled {
+                let airplayHighlightedImage = UIImage(named: self.airplayOnImageName)?.maskWith(color: self.airplayHighlightedColor)
+                self.volumeView.setRouteButtonImage(airplayHighlightedImage, for: .highlighted)
+            } else {
+                let airplayHighlightedImage = UIImage(named: self.airplayOffImageName)?.maskWith(color: self.airplayHighlightedColor)
+                self.volumeView.setRouteButtonImage(airplayHighlightedImage, for: .highlighted)
+            }
+        }
+        
     }
     
     // MARK: - Utility Functions

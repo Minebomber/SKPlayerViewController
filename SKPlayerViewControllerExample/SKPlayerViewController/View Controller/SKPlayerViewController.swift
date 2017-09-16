@@ -728,24 +728,23 @@ class SKPlayerViewController: UIViewController, GCKSessionManagerListener, GCKRe
     
     private func exitFullScreenToEmbed() {
         
-        var frame = self.view.window?.convert(self.view.frame, to: self.proxyView?.superview)
-        self.proxyView?.superview?.addSubview(self.view)
+        var frame = self.view.window?.convert(self.proxyView!.frame, from: self.proxyView?.superview)
         
         if !(UIApplication.shared.statusBarOrientation == .landscapeRight || UIApplication.shared.statusBarOrientation == .landscapeLeft) {
-            frame?.origin.y -= self.statusBarHeight
+            frame?.origin.y += self.statusBarHeight
         }
-        
-        self.view.frame = frame!
         
         self.isFullscreen = false
         
-        UIView.animate(withDuration: 0.25, animations: {
-            
-            self.view.frame = self.proxyView!.frame
-            
+        UIView.animate(withDuration: 0.25, animations: { 
+            self.view.frame = frame!
             self.view.layoutIfNeeded()
             self.setNeedsStatusBarAppearanceUpdate()
         }) { (_) in
+            // Now convert back to superview
+            self.view.frame = self.proxyView!.frame
+            self.proxyView?.superview?.addSubview(self.view)
+            
             self.proxyView?.removeFromSuperview()
             self.proxyView = nil
         }
@@ -793,7 +792,6 @@ class SKPlayerViewController: UIViewController, GCKSessionManagerListener, GCKRe
                 self.volumeView.setRouteButtonImage(airplayHighlightedImage, for: .highlighted)
             }
         }
-        
     }
     
     // MARK: - Utility Functions

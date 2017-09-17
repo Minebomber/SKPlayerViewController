@@ -267,22 +267,15 @@ class SKPlayerViewController: UIViewController, GCKSessionManagerListener, GCKRe
     
     // MARK: - Chromecast Methods
     func sessionManager(_ sessionManager: GCKSessionManager, didStart session: GCKSession) {
-        NSLog("sessionManager didStartSession: %@", session)
         self.switchChromecastToRemotePlayback()
     }
     
     func sessionManager(_ sessionManager: GCKSessionManager, didResumeSession session: GCKSession) {
-        NSLog("sessionManager didResumeSession: %@", session)
         self.switchChromecastToRemotePlayback()
     }
     
     func sessionManager(_ sessionManager: GCKSessionManager, didEnd session: GCKSession, withError error: Error?) {
-        print("session ended with error: \(String(describing: error))")
         self.switchChromecastToLocalPlayback()
-    }
-    
-    func sessionManager(_ sessionManager: GCKSessionManager, didFailToStart session: GCKCastSession, withError error: Error) {
-        print("session failed to start with error: \(error)")
     }
     
     func remoteMediaClient(_ client: GCKRemoteMediaClient, didUpdate mediaStatus: GCKMediaStatus?) {
@@ -528,8 +521,6 @@ class SKPlayerViewController: UIViewController, GCKSessionManagerListener, GCKRe
     }
     
     @objc private func toggleFullScreen() {
-        print("toggleFullscreen")
-        print("Embed: \(self.isEmbeded), Fullscreen: \(self.isFullscreen)")
         if isEmbeded {
             if isFullscreen {
                 self.exitFullScreenToEmbed()
@@ -736,8 +727,6 @@ class SKPlayerViewController: UIViewController, GCKSessionManagerListener, GCKRe
     // Fullscreen stuff.
     
     private func enterFullScreenFromEmbed() {
-        
-        print("enter from embed")
         
         self.proxyView = UIView(frame: self.view.frame)
         self.proxyView?.isHidden = true
@@ -993,8 +982,6 @@ class SKPlayerViewController: UIViewController, GCKSessionManagerListener, GCKRe
         self.player?.removeObserver(self, forKeyPath: kPlaybackBufferFull)
         self.player?.removeObserver(self, forKeyPath: kPlaybackBufferEmpty)
         self.player?.removeObserver(self, forKeyPath: kPlayerStatus)
-        
-        print("dealloc")
         
         self.deallocPlayer()
     }

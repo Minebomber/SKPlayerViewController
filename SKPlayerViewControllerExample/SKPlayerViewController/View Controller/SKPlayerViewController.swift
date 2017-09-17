@@ -245,6 +245,20 @@ class SKPlayerViewController: UIViewController, GCKSessionManagerListener, GCKRe
         self.hideControls()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        if self.parent != nil && self.presentingViewController == nil {
+            self.isEmbeded = true
+            self.isFullscreen = false
+        } else {
+            self.isEmbeded = false
+            self.isFullscreen = true
+        }
+        
+        self.setNeedsStatusBarAppearanceUpdate()
+    }
+    
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
         
@@ -714,6 +728,7 @@ class SKPlayerViewController: UIViewController, GCKSessionManagerListener, GCKRe
             
             if self.isShowingControls {
                 self.playPauseButton?.isHidden = false
+                self.playPauseButton?.alpha = 1
             }
         }
     }

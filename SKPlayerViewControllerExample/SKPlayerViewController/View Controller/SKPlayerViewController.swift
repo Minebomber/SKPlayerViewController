@@ -242,6 +242,7 @@ class SKPlayerViewController: UIViewController, GCKSessionManagerListener, GCKRe
         self.updateTimer = Timer.scheduledTimer(timeInterval: 0.8, target: self, selector: #selector(SKPlayerViewController.updateTimesInUI), userInfo: nil, repeats: true)
         
         self.playPlayer() // Start playback
+        self.hideControls()
     }
     
     override func viewWillLayoutSubviews() {
@@ -273,11 +274,11 @@ class SKPlayerViewController: UIViewController, GCKSessionManagerListener, GCKRe
     func remoteMediaClient(_ client: GCKRemoteMediaClient, didUpdate mediaStatus: GCKMediaStatus?) {
         if mediaStatus?.playerState == .buffering || mediaStatus?.playerState == .loading {
             if self.playerExternalState == .chromecast {
-                self.showBufferingIndiciator()
+                self.addBufferingIndiciator()
             }
         } else {
             if self.playerExternalState == .chromecast {
-                self.hideBufferingIndicator()
+                self.removeBufferingIndicator()
             }
         }
     }
@@ -629,7 +630,15 @@ class SKPlayerViewController: UIViewController, GCKSessionManagerListener, GCKRe
         }
     }
     
-    private func hideControls() {
+    func showBufferingIndicator() {
+        self.bufferingIndicator?.alpha = 1
+    }
+    
+    func hideBufferingIndicator() {
+        self.bufferingIndicator?.alpha = 0
+    }
+    
+    func hideControls() {
         
         UIView.animate(withDuration: self.controlsFadeTime, delay: 0.0, options: self.controlsFadeAnimationCurve, animations: {
             self.topBarContainer?.alpha = 0
@@ -646,7 +655,7 @@ class SKPlayerViewController: UIViewController, GCKSessionManagerListener, GCKRe
         self.isShowingControls = false
     }
     
-    private func showControls() {
+    func showControls() {
         
         self.topBarContainer?.isHidden = false
         self.bottomBarContainer?.isHidden = false
@@ -679,16 +688,16 @@ class SKPlayerViewController: UIViewController, GCKSessionManagerListener, GCKRe
             let bufferEmpty = self.player!.currentItem!.isPlaybackBufferEmpty
             
             if (likelyToKeepUp || bufferFull) && !self.bufferingIndicator!.isHidden && self.playerExternalState != .chromecast {
-                self.hideBufferingIndicator()
+                self.removeBufferingIndicator()
             }
             
             if bufferEmpty && self.bufferingIndicator!.isHidden && self.playerExternalState != .chromecast {
-                self.showBufferingIndiciator()
+                self.addBufferingIndiciator()
             }
         }
     }
     
-    private func showBufferingIndiciator() {
+    private func addBufferingIndiciator() {
         
         DispatchQueue.main.async {
             self.playPauseButton?.isHidden = true
@@ -698,7 +707,7 @@ class SKPlayerViewController: UIViewController, GCKSessionManagerListener, GCKRe
         }
     }
     
-    private func hideBufferingIndicator() {
+    private func removeBufferingIndicator() {
         
         DispatchQueue.main.async {
             self.bufferingIndicator?.stopAnimating()
@@ -883,7 +892,7 @@ class SKPlayerViewController: UIViewController, GCKSessionManagerListener, GCKRe
     // Seeking stuff: https://developer.apple.com/library/content/qa/qa1820/_index.html
     private func stopPlayingAndSeekSmoothlyToTime(newChaseTime: CMTime) {
         if self.playerExternalState != .chromecast {
-            self.showBufferingIndiciator()
+            self.addBufferingIndiciator()
         }
         
         self.pausePlayer()
@@ -916,7 +925,7 @@ class SKPlayerViewController: UIViewController, GCKSessionManagerListener, GCKRe
                 if CMTimeCompare(seekTimeInProgress, self.chaseTime) == 0 {
                     self.isSeekInProgress = false
                     if self.playerExternalState != .chromecast  {
-                        self.hideBufferingIndicator()
+                        self.removeBufferingIndicator()
                     }
                     if self.playerRateBeforeSeek > 0 {
                         self.playPlayer()

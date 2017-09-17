@@ -16,6 +16,7 @@ class PresentedViewController: UIViewController, SKPlayerViewControllerDelegate 
                         album: "Academica", duration: 2972.300,
                         streamUrl: "http://play.streamkit.tv/content/channel/sperantatv/vod/2017/9/academica_10_09_2017.player.m3u8",
                         thumbnailUrl: "http://space.streamkit.tv/hdd7/content/channel/sperantatv/vod/2017/9/academica_10_09_2017.mp4_medium.jpg",
+                        dateCreated: Date(),
                         isLiveStream: false)
     
     // NECESSARY OVERRIDES FOR PLAYER VIEW CONTROLLER

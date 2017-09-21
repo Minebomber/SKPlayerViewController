@@ -337,7 +337,9 @@ class SKPlayerViewController: UIViewController, GCKSessionManagerListener, GCKRe
         
         let builder = GCKMediaQueueItemBuilder()
         builder.mediaInformation = self.generateMediaInformation()
-        builder.autoplay = self.player!.rate > Float(0.0)
+        if self.player != nil {
+            builder.autoplay = self.player!.rate > Float(0.0)
+        }
         builder.preloadTime = 0
         
         let item = builder.build()

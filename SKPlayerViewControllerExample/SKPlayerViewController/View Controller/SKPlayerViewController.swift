@@ -370,9 +370,9 @@ class SKPlayerViewController: UIViewController, GCKSessionManagerListener, GCKRe
             
             let font = self.timeRemainingLabel!.font!
             
-            let attributes = [NSFontAttributeName : font as Any]
+            let attributes = [NSAttributedStringKey.font : font as Any]
             
-            let durationWidth = ceil(durationString.size(attributes: attributes).width)
+            let durationWidth = ceil(durationString.size(withAttributes: attributes).width)
             
             self.timeElapsedWidth?.constant = durationWidth
             self.timeRemainingWidth?.constant = durationWidth
@@ -566,12 +566,12 @@ class SKPlayerViewController: UIViewController, GCKSessionManagerListener, GCKRe
     }
     
     @objc private func toggleVideoGravityOfPlayer() {
-        if self.playerLayer.videoGravity == AVLayerVideoGravityResizeAspect {
-            self.playerLayer.videoGravity = AVLayerVideoGravityResizeAspectFill
-            self.player?.externalPlaybackVideoGravity = AVLayerVideoGravityResizeAspectFill
+        if self.playerLayer.videoGravity == AVLayerVideoGravity.resizeAspect {
+            self.playerLayer.videoGravity = AVLayerVideoGravity.resizeAspectFill
+            self.player?.externalPlaybackVideoGravity = AVLayerVideoGravity.resizeAspectFill
         } else {
-            self.playerLayer.videoGravity = AVLayerVideoGravityResizeAspect
-            self.player?.externalPlaybackVideoGravity = AVLayerVideoGravityResizeAspect
+            self.playerLayer.videoGravity = AVLayerVideoGravity.resizeAspect
+            self.player?.externalPlaybackVideoGravity = AVLayerVideoGravity.resizeAspect
         }
     }
     

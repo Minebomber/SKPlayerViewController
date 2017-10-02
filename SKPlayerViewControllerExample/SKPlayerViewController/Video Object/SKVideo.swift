@@ -1,31 +1,38 @@
 //
 //  SKVideo.swift
-//  SKPlayerViewControllerExample
+//  StreamKit-iOS
 //
-//  Created by Mark Lagae on 9/10/17.
+//  Created by Mark Lagae on 9/28/17.
 //  Copyright © 2017 Mark Lagae. All rights reserved.
 //
 
-import UIKit
+import Foundation
 
-class SKVideo: NSObject {
-
-    var title: String!
-    var album: String!
-    var duration: Double!
-    var streamUrl: String!
-    var thumbnailUrl: String!
-    var dateCreated: Date!
+class SKVideo {
+    var title: String
+    var album: String
+    var duration: Double // in milliseconds
+    var m3u8: String
+    var thumbnail: String
+    var created: String
+    let dateCreated: Date
+    var isLiveStream: Bool
     
-    var isLiveStream: Bool!
-    
-    init(title: String, album: String, duration: Double, streamUrl: String, thumbnailUrl: String, dateCreated: Date, isLiveStream: Bool) {
+    init(title: String, album: String, duration: Double, m3u8: String, thumbnail: String, created: String?, isLiveStream: Bool) {
         self.title = title
         self.album = album
         self.duration = duration
-        self.streamUrl = streamUrl
-        self.thumbnailUrl = thumbnailUrl
-        self.dateCreated = dateCreated
+        self.m3u8 = m3u8
+        self.thumbnail = thumbnail
+        self.created = created ?? ""
+        self.dateCreated = SKVideo.getDateFromDateString(dateString: created)
         self.isLiveStream = isLiveStream
+    }
+    
+    class func getDateFromDateString(dateString: String?) -> Date {
+        if dateString == nil { return Date() }
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ" // Date string format
+        return dateFormatter.date(from: dateString!)!
     }
 }

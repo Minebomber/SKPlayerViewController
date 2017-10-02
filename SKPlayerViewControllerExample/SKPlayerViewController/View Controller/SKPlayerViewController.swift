@@ -12,7 +12,7 @@ import AVFoundation
 import MediaPlayer
 import GoogleCast
 
-class SKPlayerViewController: UIViewController, GCKSessionManagerListener, GCKRemoteMediaClientListener {
+class SKPlayerViewController: UIViewController, GCKSessionManagerListener, GCKRemoteMediaClientListener, GCKRequestDelegate {
     
     // MARK: - Variables
     
@@ -103,8 +103,11 @@ class SKPlayerViewController: UIViewController, GCKSessionManagerListener, GCKRe
     
     private var statusBarHeight: CGFloat = UIApplication.shared.statusBarFrame.height != 0 ? UIApplication.shared.statusBarFrame.height : 20.0
     
+    private var chromecastSeekInProgress = false
+    private var seekRequestId: GCKRequestID?
+    
     // MARK: Interface Builder Connections
-    @IBOutlet weak var airplayContainer: UIView?
+    @IBOutlet weak var airplayButton: UIButton?
     @IBOutlet weak var chromecastContainer: UIView?
     
     @IBOutlet weak var playPauseButton: UIButton?
@@ -118,7 +121,6 @@ class SKPlayerViewController: UIViewController, GCKSessionManagerListener, GCKRe
     
     @IBOutlet weak var bottomBarContainer: UIView?
     @IBOutlet weak var topBarContainer: UIView?
-    @IBOutlet weak var statusBarBacking: UIView?
     
     @IBOutlet weak var bufferingIndicator: UIActivityIndicatorView?
     
@@ -141,6 +143,8 @@ class SKPlayerViewController: UIViewController, GCKSessionManagerListener, GCKRe
     let airplayOffImageName: String = "sk_airplay_off"
     let airplayOnImageName: String = "sk_airplay_on"
     let airplayHighlightedColor: UIColor = UIColor(white: 0.75, alpha: 1.0)
+    let airplayOnColor: UIColor = UIColor.white
+    let airplayOffColor: UIColor = UIColor.white
     
     let chromecastTintColor: UIColor = UIColor.white
     
@@ -167,7 +171,7 @@ class SKPlayerViewController: UIViewController, GCKSessionManagerListener, GCKRe
         
         self.video = video
         
-        self.playUrl = URL(string: self.video.streamUrl)
+        self.playUrl = URL(string: self.video.m3u8)
         self.videoIsHLS = self.video.isLiveStream
     }
     
@@ -214,14 +218,10 @@ class SKPlayerViewController: UIViewController, GCKSessionManagerListener, GCKRe
         
         self.updateUIForHLSIfNeeded()
         
-        self.addExternalPlayerButtons()
+        self.setupExternalPlayerButtons()
         
         self.sessionManager = GCKCastContext.sharedInstance().sessionManager
         self.sessionManager.add(self)
-        
-        // Add top layout guide constraint
-        let topGuide = self.topLayoutGuide
-        self.view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:[topGuide]-0-[topView]", options: NSLayoutFormatOptions(rawValue: 0), metrics: nil, views: ["topGuide" : topGuide, "topView" : self.topBarContainer!]))
         
         // Disconnect if new video (to prevent wierd glitches with different videos)
         if self.sessionManager.connectionState == .connected || self.sessionManager.connectionState == GCKConnectionState.connecting {
@@ -288,6 +288,12 @@ class SKPlayerViewController: UIViewController, GCKSessionManagerListener, GCKRe
                 self.removeBufferingIndicator()
             }
         }
+        
+        if mediaStatus?.playerState == .paused {
+            self.pausePlayer()
+        } else if mediaStatus?.playerState == .playing {
+            self.playPlayer()
+        }
     }
     
     private func generateMediaInformation() -> GCKMediaInformation {
@@ -295,9 +301,9 @@ class SKPlayerViewController: UIViewController, GCKSessionManagerListener, GCKRe
         metadata.setString(self.video.title, forKey: kGCKMetadataKeyTitle)
         metadata.setString(self.video.album, forKey: kGCKMetadataKeyAlbumTitle)
         
-        metadata.addImage(GCKImage(url: URL(string: self.video.thumbnailUrl)!, width: 480, height: 720))
+        metadata.addImage(GCKImage(url: URL(string: self.video.thumbnail)!, width: 480, height: 720))
         
-        let mediaInfo = GCKMediaInformation(contentID: self.video.streamUrl, streamType: .buffered, contentType: "video/mp4", metadata: metadata, streamDuration: self.video.duration, mediaTracks: nil, textTrackStyle: nil, customData: nil)
+        let mediaInfo = GCKMediaInformation(contentID: self.video.m3u8, streamType: .buffered, contentType: "video/x-mpegURL", metadata: metadata, streamDuration: self.video.duration * 1000, mediaTracks: nil, textTrackStyle: nil, customData: nil)
         
         return mediaInfo
     }
@@ -311,18 +317,32 @@ class SKPlayerViewController: UIViewController, GCKSessionManagerListener, GCKRe
         }
     }
     
+    internal func requestDidComplete(_ request: GCKRequest) {
+        if request.requestID == self.seekRequestId! {
+            self.chromecastSeekInProgress = false
+            self.seekRequestId = nil
+        }
+    }
+    
     private func switchChromecastToLocalPlayback() {
         if self.chromecastEnabled == false { return }
         
         if self.playerExternalState == .chromecast {
             let position = self.castMediaController.lastKnownStreamPosition
             
-            let newTime = CMTimeMakeWithSeconds(position, self.player!.currentItem!.duration.timescale)
+            if !position.isFinite {
+                self.chromecastEnabled = false
+                return
+            }
             
-            self.chromecastEnabled = false
-            
-            if newTime.isValid { // Time might not be valid if livestream
-                self.stopPlayingAndSeekSmoothlyToTime(newChaseTime: newTime)
+            if self.player != nil {
+                let newTime = CMTimeMakeWithSeconds(position, self.player!.currentItem!.duration.timescale)
+                
+                self.chromecastEnabled = false
+                
+                if newTime.isValid { // Time might not be valid if livestream
+                    self.stopPlayingAndSeekSmoothlyToTime(newChaseTime: newTime)
+                }
             }
         }
         
@@ -403,29 +423,26 @@ class SKPlayerViewController: UIViewController, GCKSessionManagerListener, GCKRe
         self.fullscreenButton?.addTarget(self, action: #selector(SKPlayerViewController.toggleFullScreen), for: .touchUpInside)
     }
     
-    private func addExternalPlayerButtons() {
-        self.addAirplayButton()
+    private func setupExternalPlayerButtons() {
+        self.airplayButton?.addTarget(self, action: #selector(SKPlayerViewController.airplayButtonPressed), for: .touchUpInside)
+        self.addAirplayButtonImages()
         self.addChromecastButton()
     }
     
-    private func addAirplayButton() {
+    private func addAirplayButtonImages() {
         self.volumeView.showsVolumeSlider = false
         self.volumeView.sizeToFit()
-        
-        self.volumeView.frame = self.airplayContainer!.bounds
+        self.volumeView.isHidden = true
+        self.volumeView.frame = CGRect.zero
+        self.view.addSubview(self.volumeView)
         
         // Customization
         let airplayOffImage = UIImage(named: airplayOffImageName)
-        self.volumeView.setRouteButtonImage(airplayOffImage, for: .normal)
+        self.airplayButton?.setImage(airplayOffImage, for: .normal)
         
         let airplayHighlightedImage = airplayOffImage?.maskWith(color: airplayHighlightedColor)
-        self.volumeView.setRouteButtonImage(airplayHighlightedImage, for: .highlighted)
-        
-        let airplayOnImage = UIImage(named: airplayOnImageName)
-        self.volumeView.setRouteButtonImage(airplayOnImage, for: .selected)
-        
-        self.airplayContainer?.addSubview(self.volumeView)
-        self.airplayContainer?.backgroundColor = UIColor.clear
+        self.airplayButton?.setImage(airplayHighlightedImage, for: .highlighted)
+        self.airplayButton?.setImage(airplayHighlightedImage, for: .selected)
         
         NotificationCenter.default.addObserver(self, selector: #selector(SKPlayerViewController.wirelessRouteActiveChanged), name: .MPVolumeViewWirelessRouteActiveDidChange, object: nil)
     }
@@ -439,6 +456,9 @@ class SKPlayerViewController: UIViewController, GCKSessionManagerListener, GCKRe
         self.chromecastContainer?.backgroundColor = UIColor.clear
     }
     
+    @objc private func airplayButtonPressed() {
+        UIApplication.shared.sendAction(NSSelectorFromString("_displayAudioRoutePicker"), to: self.volumeView, from: self.view, for: nil)
+    }
     
     @objc private func playPause() {
         if self.player != nil {
@@ -452,6 +472,8 @@ class SKPlayerViewController: UIViewController, GCKSessionManagerListener, GCKRe
     }
     
     private func playPlayer() {
+        if self.player == nil { return }
+        if self.player!.rate > Float(0) { return }
         
         let pauseBaseImage = UIImage(named: pauseImageName)!
         
@@ -470,6 +492,8 @@ class SKPlayerViewController: UIViewController, GCKSessionManagerListener, GCKRe
     }
     
     private func pausePlayer() {
+        if self.player == nil { return }
+        if self.player!.rate == Float(0) { return }
         
         let playBaseImage = UIImage(named: playImageName)!
         
@@ -512,13 +536,15 @@ class SKPlayerViewController: UIViewController, GCKSessionManagerListener, GCKRe
         if self.player != nil {
             let videoDuration = Float(CMTimeGetSeconds(self.player!.currentItem!.duration))
             let elapsedTime = videoDuration * seekSlider!.value
-            
             self.updateTimeLabelsWith(elapsedTime: elapsedTime, duration: videoDuration)
             
-            let timescale = self.player!.currentItem!.asset.duration.timescale
-            
-            let newSeekTime = CMTimeMakeWithSeconds(Float64(elapsedTime), timescale)
-            self.stopPlayingAndSeekSmoothlyToTime(newChaseTime: newSeekTime)
+            if !self.chromecastEnabled {
+                
+                let timescale = self.player!.currentItem!.asset.duration.timescale
+                
+                let newSeekTime = CMTimeMakeWithSeconds(Float64(elapsedTime), timescale)
+                self.stopPlayingAndSeekSmoothlyToTime(newChaseTime: newSeekTime)
+            }
         }
     }
     
@@ -544,23 +570,37 @@ class SKPlayerViewController: UIViewController, GCKSessionManagerListener, GCKRe
         
         if self.playerExternalState != .chromecast {
             
-            let elapsedTimeSeconds = Float(CMTimeGetSeconds(elapsedTime))
+            var elapsedTimeSeconds: Float = 0
+            if self.isSeekInProgress {
+                elapsedTimeSeconds = Float(CMTimeGetSeconds(self.chaseTime))
+            } else {
+                elapsedTimeSeconds = Float(CMTimeGetSeconds(elapsedTime))
+            }
+            
             let duration = Float(CMTimeGetSeconds(self.player!.currentItem!.duration))
-            
-            self.updateTimeLabelsWith(elapsedTime: elapsedTimeSeconds, duration: duration)
-            self.updateSeekSliderWith(elapsedTime: elapsedTimeSeconds, duration: Float(CMTimeGetSeconds(self.player!.currentItem!.duration)))
-            self.setWidthOfTimeLabelsBasedOnDuration(duration)
-            
+            DispatchQueue.main.async {
+                self.updateTimeLabelsWith(elapsedTime: elapsedTimeSeconds, duration: duration)
+                self.updateSeekSliderWith(elapsedTime: elapsedTimeSeconds, duration: duration)
+                self.setWidthOfTimeLabelsBasedOnDuration(duration)
+            }
         } else {
             
             if self.castSession != nil && self.castSession!.remoteMediaClient != nil {
                 
-                let elapsedTimeSeconds = Float(self.castSession!.remoteMediaClient!.approximateStreamPosition())
+                var elapsedTimeSeconds: Float = 0
+                if self.chromecastSeekInProgress {
+                    elapsedTimeSeconds = Float(CMTimeGetSeconds(self.chaseTime))
+                } else {
+                    elapsedTimeSeconds = Float(self.castSession!.remoteMediaClient!.approximateStreamPosition())
+                }
+                
                 let duration = Float(CMTimeGetSeconds(self.player!.currentItem!.duration))
                 
-                self.updateTimeLabelsWith(elapsedTime: elapsedTimeSeconds, duration: duration)
-                self.updateSeekSliderWith(elapsedTime: elapsedTimeSeconds, duration: duration)
-                self.setWidthOfTimeLabelsBasedOnDuration(duration)
+                DispatchQueue.main.async {
+                    self.updateTimeLabelsWith(elapsedTime: elapsedTimeSeconds, duration: duration)
+                    self.updateSeekSliderWith(elapsedTime: elapsedTimeSeconds, duration: duration)
+                    self.setWidthOfTimeLabelsBasedOnDuration(duration)
+                }
             }
         }
     }
@@ -594,14 +634,27 @@ class SKPlayerViewController: UIViewController, GCKSessionManagerListener, GCKRe
     private func updateTimeLabelsWith(elapsedTime: Float, duration: Float) {
         
         if !self.videoIsHLS {
-            if elapsedTime.isFinite {
-                self.timeElapsedLabel?.text = hmsToString(hms: secondsToHoursMinutesSeconds(seconds: Int(roundf(elapsedTime)))) // Basically convert seconds to the time string
-            }
-            
-            let timeRemaining = duration - elapsedTime
-            
-            if timeRemaining.isFinite {
-                self.timeRemainingLabel?.text = "-\(hmsToString(hms: secondsToHoursMinutesSeconds(seconds: Int(roundf(Float(timeRemaining))))))"
+            if !self.isSeekInProgress {
+                if elapsedTime.isFinite {
+                    self.timeElapsedLabel?.text = hmsToString(hms: secondsToHoursMinutesSeconds(seconds: Int(roundf(elapsedTime)))) // Basically convert seconds to the time string
+                }
+                
+                let timeRemaining = duration - elapsedTime
+                
+                if timeRemaining.isFinite {
+                    self.timeRemainingLabel?.text = "-\(hmsToString(hms: secondsToHoursMinutesSeconds(seconds: Int(roundf(Float(timeRemaining))))))"
+                }
+            } else {
+                let seekTime = Float(CMTimeGetSeconds(self.chaseTime))
+                if seekTime.isFinite {
+                    self.timeElapsedLabel?.text = hmsToString(hms: secondsToHoursMinutesSeconds(seconds: Int(roundf(seekTime)))) // Basically convert seconds to the time string
+                }
+                
+                let timeRemaining = duration - seekTime
+                
+                if timeRemaining.isFinite {
+                    self.timeRemainingLabel?.text = "-\(hmsToString(hms: secondsToHoursMinutesSeconds(seconds: Int(roundf(Float(timeRemaining))))))"
+                }
             }
         }
     }
@@ -645,44 +698,63 @@ class SKPlayerViewController: UIViewController, GCKSessionManagerListener, GCKRe
         self.bufferingIndicator?.alpha = 0
     }
     
-    func hideControls() {
-        
-        UIView.animate(withDuration: self.controlsFadeTime, delay: 0.0, options: self.controlsFadeAnimationCurve, animations: {
+    func hideControls(animated: Bool = true) {
+        if animated {
+            UIView.animate(withDuration: self.controlsFadeTime, delay: 0.0, options: self.controlsFadeAnimationCurve, animations: {
+                self.topBarContainer?.alpha = 0
+                self.bottomBarContainer?.alpha = 0
+                self.playPauseButton?.alpha = 0
+            }) { (_) in
+                self.topBarContainer?.isHidden = true
+                self.bottomBarContainer?.isHidden = true
+                self.playPauseButton?.isHidden = true
+            }
+        } else {
             self.topBarContainer?.alpha = 0
             self.bottomBarContainer?.alpha = 0
-            self.statusBarBacking?.alpha = 0
             self.playPauseButton?.alpha = 0
-        }) { (_) in
+            
             self.topBarContainer?.isHidden = true
             self.bottomBarContainer?.isHidden = true
-            self.statusBarBacking?.isHidden = true
             self.playPauseButton?.isHidden = true
         }
-        
         self.isShowingControls = false
     }
     
-    func showControls() {
-        
-        self.topBarContainer?.isHidden = false
-        self.bottomBarContainer?.isHidden = false
-        self.statusBarBacking?.isHidden = false
-        
-        // Only if not buffering show play button
-        if self.bufferingIndicator!.isHidden {
-            self.playPauseButton?.isHidden = false
-        }
-        
-        UIView.animate(withDuration: self.controlsFadeTime, delay: 0.0, options: self.controlsFadeAnimationCurve, animations: {
+    func showControls(animated: Bool = true) {
+        if animated {
+            self.topBarContainer?.isHidden = false
+            self.bottomBarContainer?.isHidden = false
+            
+            // Only if not buffering show play button
+            if self.bufferingIndicator!.isHidden {
+                self.playPauseButton?.isHidden = false
+            }
+            
+            UIView.animate(withDuration: self.controlsFadeTime, delay: 0.0, options: self.controlsFadeAnimationCurve, animations: {
+                self.topBarContainer?.alpha = 1
+                self.bottomBarContainer?.alpha = 1
+                
+                if self.bufferingIndicator!.isHidden {
+                    self.playPauseButton?.alpha = 1
+                }
+            }, completion: nil)
+        } else {
+            self.topBarContainer?.isHidden = false
+            self.bottomBarContainer?.isHidden = false
+            
+            // Only if not buffering show play button
+            if self.bufferingIndicator!.isHidden {
+                self.playPauseButton?.isHidden = false
+            }
+            
             self.topBarContainer?.alpha = 1
             self.bottomBarContainer?.alpha = 1
-            self.statusBarBacking?.alpha = 1
             
             if self.bufferingIndicator!.isHidden {
                 self.playPauseButton?.alpha = 1
             }
-        }, completion: nil)
-        
+        }
         self.isShowingControls = true
     }
     
@@ -759,7 +831,7 @@ class SKPlayerViewController: UIViewController, GCKSessionManagerListener, GCKRe
         
         self.isFullscreen = false
         
-        UIView.animate(withDuration: self.fullscreenTransitionTime, delay: 0.0, options: self.fullscreenTransitionAnimationCurve, animations: { 
+        UIView.animate(withDuration: self.fullscreenTransitionTime, delay: 0.0, options: self.fullscreenTransitionAnimationCurve, animations: {
             self.view.frame = frame!
             self.view.layoutIfNeeded()
             self.setNeedsStatusBarAppearanceUpdate()
@@ -808,11 +880,19 @@ class SKPlayerViewController: UIViewController, GCKSessionManagerListener, GCKRe
         
         DispatchQueue.main.async {
             if self.airplayEnabled {
-                let airplayHighlightedImage = UIImage(named: self.airplayOnImageName)?.maskWith(color: self.airplayHighlightedColor)
-                self.volumeView.setRouteButtonImage(airplayHighlightedImage, for: .highlighted)
+                let airplayOnBaseImage = UIImage(named: self.airplayOnImageName)
+                self.airplayButton?.setImage(airplayOnBaseImage?.maskWith(color: self.airplayOnColor), for: .normal)
+                
+                let airplayHighlightedImage = airplayOnBaseImage?.maskWith(color: self.airplayHighlightedColor)
+                self.airplayButton?.setImage(airplayHighlightedImage, for: .highlighted)
+                self.airplayButton?.setImage(airplayHighlightedImage, for: .selected)
             } else {
-                let airplayHighlightedImage = UIImage(named: self.airplayOffImageName)?.maskWith(color: self.airplayHighlightedColor)
-                self.volumeView.setRouteButtonImage(airplayHighlightedImage, for: .highlighted)
+                let airplayOffBaseImage = UIImage(named: self.airplayOffImageName)
+                self.airplayButton?.setImage(airplayOffBaseImage?.maskWith(color: self.airplayOffColor), for: .normal)
+                
+                let airplayHighlightedImage = airplayOffBaseImage?.maskWith(color: self.airplayHighlightedColor)
+                self.airplayButton?.setImage(airplayHighlightedImage, for: .highlighted)
+                self.airplayButton?.setImage(airplayHighlightedImage, for: .selected)
             }
         }
     }
@@ -821,6 +901,7 @@ class SKPlayerViewController: UIViewController, GCKSessionManagerListener, GCKRe
     
     func deallocPlayer() {
         self.pausePlayer()
+        GCKCastContext.sharedInstance().sessionManager.endSessionAndStopCasting(true)
         self.playerLayer.removeFromSuperlayer()
         self.player = nil
         
@@ -942,8 +1023,11 @@ class SKPlayerViewController: UIViewController, GCKSessionManagerListener, GCKRe
             }
             
             // Also seek in chromecast if needed
-            if self.castSession != nil {
-                self.castSession!.remoteMediaClient?.seek(toTimeInterval: CMTimeGetSeconds(self.player!.currentTime()) * 1000, resumeState: .unchanged)
+            if self.castSession != nil && self.chromecastEnabled {
+                let seekReq = self.castSession!.remoteMediaClient?.seek(toTimeInterval: CMTimeGetSeconds(self.chaseTime), resumeState: .unchanged)
+                self.chromecastSeekInProgress = true
+                self.seekRequestId = seekReq!.requestID
+                seekReq?.delegate = self
             }
         }
     }
@@ -964,10 +1048,10 @@ class SKPlayerViewController: UIViewController, GCKSessionManagerListener, GCKRe
             if self.player != nil {
                 self.playerCurrentItemStatus = self.player!.currentItem!.status
                 
-                if self.playerCurrentItemStatus == .readyToPlay && self.isSeekInProgress {
-                    // kvo done waiting
-                    self.tryToSeekToChaseTime()
-                }
+                //                if self.playerCurrentItemStatus == .readyToPlay && self.isSeekInProgress {
+                //                    // kvo done waiting
+                //                    self.tryToSeekToChaseTime()
+                //                }
             }
         default:
             break

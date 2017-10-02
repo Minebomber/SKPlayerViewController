@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="12121" systemVersion="16G29" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13196" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina4_7" orientation="landscape">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12089"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13173"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
-        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="SKPlayerViewController" customModule="SKPlayerViewControllerExample" customModuleProvider="target">
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="SKPlayerViewController" customModule="StreamKit_iOS" customModuleProvider="target">
             <connections>
-                <outlet property="airplayContainer" destination="vF7-t6-apG" id="DFG-Ok-Oox"/>
+                <outlet property="airplayButton" destination="Qlb-Cu-IiE" id="5a7-uP-4ZQ"/>
                 <outlet property="bottomBarContainer" destination="UoC-9C-duP" id="d9r-ep-NMT"/>
                 <outlet property="bufferingIndicator" destination="eUG-Y6-X1Y" id="Kml-xz-LAH"/>
                 <outlet property="chromecastContainer" destination="T7a-7x-9Ka" id="OJl-Uo-Yry"/>
@@ -20,7 +20,6 @@
                 <outlet property="playPauseButton" destination="rlc-sm-Tku" id="9y5-4w-5Ur"/>
                 <outlet property="playerOverlayView" destination="zI1-e2-hM2" id="VpA-qd-jzE"/>
                 <outlet property="seekSlider" destination="boE-5j-niM" id="767-lg-cWD"/>
-                <outlet property="statusBarBacking" destination="CNU-5H-mWz" id="VUy-84-T20"/>
                 <outlet property="timeElapsedLabel" destination="Ymf-fd-fUy" id="iIY-ol-mFY"/>
                 <outlet property="timeElapsedWidth" destination="Bw6-SH-Xub" id="ldA-O6-ARC"/>
                 <outlet property="timeRemainingLabel" destination="mPo-FK-KAr" id="Ofn-x4-2km"/>
@@ -34,15 +33,11 @@
             <rect key="frame" x="0.0" y="0.0" width="667" height="375"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="zI1-e2-hM2" customClass="SKPlayerOverlayView" customModule="SKPlayerViewControllerExample" customModuleProvider="target">
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="zI1-e2-hM2" customClass="SKPlayerOverlayView" customModule="StreamKit_iOS" customModuleProvider="target">
                     <rect key="frame" x="0.0" y="0.0" width="667" height="375"/>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                 </view>
-                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="CNU-5H-mWz">
-                    <rect key="frame" x="0.0" y="0.0" width="667" height="0.0"/>
-                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                </view>
-                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="YIB-wu-6Rg">
+                <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="YIB-wu-6Rg">
                     <rect key="frame" x="0.0" y="0.0" width="667" height="44"/>
                     <subviews>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="z0Q-UP-wAc">
@@ -50,30 +45,30 @@
                             <state key="normal" image="sk_fullscreen"/>
                         </button>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="T7a-7x-9Ka">
-                            <rect key="frame" x="56" y="10" width="24" height="24"/>
+                            <rect key="frame" x="62" y="10" width="24" height="24"/>
                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             <constraints>
                                 <constraint firstAttribute="width" constant="24" id="5Pm-IS-E3Y"/>
                                 <constraint firstAttribute="height" constant="24" id="QgV-a3-fxm"/>
                             </constraints>
                         </view>
-                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vF7-t6-apG">
-                            <rect key="frame" x="16" y="10" width="24" height="24"/>
-                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Qlb-Cu-IiE">
+                            <rect key="frame" x="16" y="7" width="30" height="30"/>
                             <constraints>
-                                <constraint firstAttribute="width" constant="24" id="hII-G0-xjZ"/>
-                                <constraint firstAttribute="height" constant="24" id="wJE-Ox-eJm"/>
+                                <constraint firstAttribute="height" constant="30" id="X8t-gA-xoN"/>
+                                <constraint firstAttribute="width" constant="30" id="tsH-iM-KhC"/>
                             </constraints>
-                        </view>
+                            <state key="normal" image="sk_airplay_off"/>
+                        </button>
                     </subviews>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                     <constraints>
+                        <constraint firstItem="Qlb-Cu-IiE" firstAttribute="centerY" secondItem="YIB-wu-6Rg" secondAttribute="centerY" id="7xD-7u-dMr"/>
+                        <constraint firstItem="T7a-7x-9Ka" firstAttribute="leading" secondItem="Qlb-Cu-IiE" secondAttribute="trailing" constant="16" id="AGB-Ad-rWJ"/>
                         <constraint firstAttribute="height" constant="44" id="JSe-oR-Boo"/>
-                        <constraint firstItem="T7a-7x-9Ka" firstAttribute="leading" secondItem="vF7-t6-apG" secondAttribute="trailing" constant="16" id="RyL-tR-dBu"/>
+                        <constraint firstItem="Qlb-Cu-IiE" firstAttribute="leading" secondItem="YIB-wu-6Rg" secondAttribute="leading" constant="16" id="SRO-2r-nxK"/>
                         <constraint firstItem="T7a-7x-9Ka" firstAttribute="centerY" secondItem="YIB-wu-6Rg" secondAttribute="centerY" id="fd8-FT-UEe"/>
                         <constraint firstItem="z0Q-UP-wAc" firstAttribute="centerY" secondItem="YIB-wu-6Rg" secondAttribute="centerY" id="jnU-Uu-UAV"/>
-                        <constraint firstItem="vF7-t6-apG" firstAttribute="leading" secondItem="YIB-wu-6Rg" secondAttribute="leading" constant="16" id="yOQ-vB-DLR"/>
-                        <constraint firstItem="vF7-t6-apG" firstAttribute="centerY" secondItem="YIB-wu-6Rg" secondAttribute="centerY" id="yvX-uk-uJi"/>
                         <constraint firstAttribute="trailing" secondItem="z0Q-UP-wAc" secondAttribute="trailing" constant="8" id="zOu-bW-Jch"/>
                     </constraints>
                 </view>
@@ -98,7 +93,7 @@
                             <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             <nil key="highlightedColor"/>
                         </label>
-                        <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="boE-5j-niM">
+                        <slider hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="boE-5j-niM">
                             <rect key="frame" x="56" y="0.0" width="555" height="31"/>
                             <color key="minimumTrackTintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             <color key="maximumTrackTintColor" red="1" green="1" blue="1" alpha="0.14999999999999999" colorSpace="custom" customColorSpace="sRGB"/>
@@ -128,26 +123,22 @@
                 <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="eUG-Y6-X1Y">
                     <rect key="frame" x="315" y="169" width="37" height="37"/>
                 </activityIndicatorView>
-                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rlc-sm-Tku">
+                <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rlc-sm-Tku">
                     <rect key="frame" x="316.5" y="170.5" width="33" height="33"/>
                     <state key="normal" image="sk_play"/>
                 </button>
             </subviews>
             <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
             <constraints>
-                <constraint firstItem="YIB-wu-6Rg" firstAttribute="top" secondItem="CNU-5H-mWz" secondAttribute="bottom" id="2D7-mc-9YW"/>
                 <constraint firstItem="YIB-wu-6Rg" firstAttribute="leading" secondItem="ZOD-4L-puL" secondAttribute="leading" id="3YM-v6-Kot"/>
                 <constraint firstAttribute="bottom" secondItem="zI1-e2-hM2" secondAttribute="bottom" id="3cY-bN-pAt"/>
-                <constraint firstAttribute="trailing" secondItem="CNU-5H-mWz" secondAttribute="trailing" id="6VF-d5-Fzj"/>
                 <constraint firstItem="rlc-sm-Tku" firstAttribute="centerX" secondItem="ZOD-4L-puL" secondAttribute="centerX" id="8h7-cZ-J1P"/>
+                <constraint firstItem="YIB-wu-6Rg" firstAttribute="top" secondItem="ZOD-4L-puL" secondAttribute="top" id="GPY-ll-bbr"/>
                 <constraint firstAttribute="trailing" secondItem="YIB-wu-6Rg" secondAttribute="trailing" id="IJ1-lT-40N"/>
                 <constraint firstAttribute="bottom" secondItem="UoC-9C-duP" secondAttribute="bottom" id="L9U-1N-WDz"/>
-                <constraint firstItem="YIB-wu-6Rg" firstAttribute="top" secondItem="ZOD-4L-puL" secondAttribute="top" placeholder="YES" id="QKj-cU-NFV"/>
                 <constraint firstItem="zI1-e2-hM2" firstAttribute="leading" secondItem="ZOD-4L-puL" secondAttribute="leading" id="SMT-GU-fL2"/>
-                <constraint firstItem="CNU-5H-mWz" firstAttribute="top" secondItem="ZOD-4L-puL" secondAttribute="top" id="Xzw-Rf-qSf"/>
                 <constraint firstItem="eUG-Y6-X1Y" firstAttribute="centerX" secondItem="ZOD-4L-puL" secondAttribute="centerX" id="YaP-l9-SMQ"/>
                 <constraint firstItem="zI1-e2-hM2" firstAttribute="top" secondItem="ZOD-4L-puL" secondAttribute="top" id="ZZu-Sf-L0G"/>
-                <constraint firstItem="CNU-5H-mWz" firstAttribute="leading" secondItem="ZOD-4L-puL" secondAttribute="leading" id="ajB-KR-QwR"/>
                 <constraint firstItem="eUG-Y6-X1Y" firstAttribute="centerY" secondItem="ZOD-4L-puL" secondAttribute="centerY" id="d1r-vI-gf9"/>
                 <constraint firstItem="YIB-wu-6Rg" firstAttribute="leading" secondItem="ZOD-4L-puL" secondAttribute="leading" id="l5g-Po-R3M"/>
                 <constraint firstAttribute="trailing" secondItem="YIB-wu-6Rg" secondAttribute="trailing" id="lhp-wQ-Qoo"/>
@@ -161,6 +152,7 @@
         </view>
     </objects>
     <resources>
+        <image name="sk_airplay_off" width="30" height="30"/>
         <image name="sk_fullscreen" width="33" height="33"/>
         <image name="sk_play" width="33" height="33"/>
     </resources>

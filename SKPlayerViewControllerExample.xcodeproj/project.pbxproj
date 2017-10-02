@@ -12,35 +12,26 @@
 		4DBEA8231F54D95A00C143EF /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DBEA8221F54D95A00C143EF /* AppDelegate.swift */; };
 		4DBEA8281F54D95A00C143EF /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4DBEA8261F54D95A00C143EF /* Main.storyboard */; };
 		4DBEA82D1F54D95A00C143EF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4DBEA82B1F54D95A00C143EF /* LaunchScreen.storyboard */; };
-		4DD3D6EC1F6CD485005D2C3B /* SKAssets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4DD3D6DE1F6CD485005D2C3B /* SKAssets.xcassets */; };
-		4DD3D6ED1F6CD485005D2C3B /* SKPlayerViewControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DD3D6E01F6CD485005D2C3B /* SKPlayerViewControllerDelegate.swift */; };
-		4DD3D6EE1F6CD485005D2C3B /* SKPlayerOverlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DD3D6E21F6CD485005D2C3B /* SKPlayerOverlayView.swift */; };
-		4DD3D6EF1F6CD485005D2C3B /* SKPlayerOverlayView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4DD3D6E31F6CD485005D2C3B /* SKPlayerOverlayView.xib */; };
-		4DD3D6F01F6CD485005D2C3B /* SKExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DD3D6E51F6CD485005D2C3B /* SKExtensions.swift */; };
-		4DD3D6F11F6CD485005D2C3B /* SKGlobals.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DD3D6E61F6CD485005D2C3B /* SKGlobals.swift */; };
-		4DD3D6F21F6CD485005D2C3B /* SKVideo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DD3D6E81F6CD485005D2C3B /* SKVideo.swift */; };
-		4DD3D6F31F6CD485005D2C3B /* SKPlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DD3D6EA1F6CD485005D2C3B /* SKPlayerViewController.swift */; };
-		4DD3D6F41F6CD485005D2C3B /* SKPlayerViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4DD3D6EB1F6CD485005D2C3B /* SKPlayerViewController.xib */; };
 		4DD3D6F71F6CD830005D2C3B /* EmbeddedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DD3D6F61F6CD830005D2C3B /* EmbeddedViewController.swift */; };
 		4DD3D6F91F6CD838005D2C3B /* PresentedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DD3D6F81F6CD838005D2C3B /* PresentedViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		4D598D2C1F5E05A7007B0DAE /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		4DADA2821F81A9D100DBD78F /* SKAssets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = SKAssets.xcassets; sourceTree = "<group>"; };
+		4DADA2841F81A9D100DBD78F /* SKPlayerViewControllerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SKPlayerViewControllerDelegate.swift; sourceTree = "<group>"; };
+		4DADA2861F81A9D100DBD78F /* SKPlayerOverlayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SKPlayerOverlayView.swift; sourceTree = "<group>"; };
+		4DADA2871F81A9D100DBD78F /* SKPlayerOverlayView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SKPlayerOverlayView.xib; sourceTree = "<group>"; };
+		4DADA2891F81A9D100DBD78F /* SKExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SKExtensions.swift; sourceTree = "<group>"; };
+		4DADA28A1F81A9D100DBD78F /* SKGlobals.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SKGlobals.swift; sourceTree = "<group>"; };
+		4DADA28C1F81A9D100DBD78F /* SKVideo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SKVideo.swift; sourceTree = "<group>"; };
+		4DADA28E1F81A9D100DBD78F /* SKPlayerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SKPlayerViewController.swift; sourceTree = "<group>"; };
+		4DADA28F1F81A9D100DBD78F /* SKPlayerViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SKPlayerViewController.xib; sourceTree = "<group>"; };
 		4DBEA81F1F54D95A00C143EF /* SKPlayerViewControllerExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SKPlayerViewControllerExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4DBEA8221F54D95A00C143EF /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		4DBEA8271F54D95A00C143EF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		4DBEA82C1F54D95A00C143EF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		4DBEA82E1F54D95A00C143EF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		4DD3D6DE1F6CD485005D2C3B /* SKAssets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = SKAssets.xcassets; sourceTree = "<group>"; };
-		4DD3D6E01F6CD485005D2C3B /* SKPlayerViewControllerDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SKPlayerViewControllerDelegate.swift; sourceTree = "<group>"; };
-		4DD3D6E21F6CD485005D2C3B /* SKPlayerOverlayView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SKPlayerOverlayView.swift; sourceTree = "<group>"; };
-		4DD3D6E31F6CD485005D2C3B /* SKPlayerOverlayView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SKPlayerOverlayView.xib; sourceTree = "<group>"; };
-		4DD3D6E51F6CD485005D2C3B /* SKExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SKExtensions.swift; sourceTree = "<group>"; };
-		4DD3D6E61F6CD485005D2C3B /* SKGlobals.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SKGlobals.swift; sourceTree = "<group>"; };
-		4DD3D6E81F6CD485005D2C3B /* SKVideo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SKVideo.swift; sourceTree = "<group>"; };
-		4DD3D6EA1F6CD485005D2C3B /* SKPlayerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SKPlayerViewController.swift; sourceTree = "<group>"; };
-		4DD3D6EB1F6CD485005D2C3B /* SKPlayerViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SKPlayerViewController.xib; sourceTree = "<group>"; };
 		4DD3D6F61F6CD830005D2C3B /* EmbeddedViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EmbeddedViewController.swift; sourceTree = "<group>"; };
 		4DD3D6F81F6CD838005D2C3B /* PresentedViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PresentedViewController.swift; sourceTree = "<group>"; };
 		A400805C56EF821B148E07BA /* Pods-SKPlayerViewControllerExample.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SKPlayerViewControllerExample.release.xcconfig"; path = "Pods/Target Support Files/Pods-SKPlayerViewControllerExample/Pods-SKPlayerViewControllerExample.release.xcconfig"; sourceTree = "<group>"; };
@@ -68,6 +59,70 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		4DADA2801F81A9D100DBD78F /* SKPlayerViewController */ = {
+			isa = PBXGroup;
+			children = (
+				4DADA2811F81A9D100DBD78F /* Assets */,
+				4DADA2831F81A9D100DBD78F /* Delegate */,
+				4DADA2851F81A9D100DBD78F /* Overlay View */,
+				4DADA2881F81A9D100DBD78F /* Utility */,
+				4DADA28B1F81A9D100DBD78F /* Video Object */,
+				4DADA28D1F81A9D100DBD78F /* View Controller */,
+			);
+			path = SKPlayerViewController;
+			sourceTree = "<group>";
+		};
+		4DADA2811F81A9D100DBD78F /* Assets */ = {
+			isa = PBXGroup;
+			children = (
+				4DADA2821F81A9D100DBD78F /* SKAssets.xcassets */,
+			);
+			path = Assets;
+			sourceTree = "<group>";
+		};
+		4DADA2831F81A9D100DBD78F /* Delegate */ = {
+			isa = PBXGroup;
+			children = (
+				4DADA2841F81A9D100DBD78F /* SKPlayerViewControllerDelegate.swift */,
+			);
+			path = Delegate;
+			sourceTree = "<group>";
+		};
+		4DADA2851F81A9D100DBD78F /* Overlay View */ = {
+			isa = PBXGroup;
+			children = (
+				4DADA2861F81A9D100DBD78F /* SKPlayerOverlayView.swift */,
+				4DADA2871F81A9D100DBD78F /* SKPlayerOverlayView.xib */,
+			);
+			path = "Overlay View";
+			sourceTree = "<group>";
+		};
+		4DADA2881F81A9D100DBD78F /* Utility */ = {
+			isa = PBXGroup;
+			children = (
+				4DADA2891F81A9D100DBD78F /* SKExtensions.swift */,
+				4DADA28A1F81A9D100DBD78F /* SKGlobals.swift */,
+			);
+			path = Utility;
+			sourceTree = "<group>";
+		};
+		4DADA28B1F81A9D100DBD78F /* Video Object */ = {
+			isa = PBXGroup;
+			children = (
+				4DADA28C1F81A9D100DBD78F /* SKVideo.swift */,
+			);
+			path = "Video Object";
+			sourceTree = "<group>";
+		};
+		4DADA28D1F81A9D100DBD78F /* View Controller */ = {
+			isa = PBXGroup;
+			children = (
+				4DADA28E1F81A9D100DBD78F /* SKPlayerViewController.swift */,
+				4DADA28F1F81A9D100DBD78F /* SKPlayerViewController.xib */,
+			);
+			path = "View Controller";
+			sourceTree = "<group>";
+		};
 		4DBEA8161F54D95A00C143EF = {
 			isa = PBXGroup;
 			children = (
@@ -89,7 +144,7 @@
 		4DBEA8211F54D95A00C143EF /* SKPlayerViewControllerExample */ = {
 			isa = PBXGroup;
 			children = (
-				4DD3D6DC1F6CD485005D2C3B /* SKPlayerViewController */,
+				4DADA2801F81A9D100DBD78F /* SKPlayerViewController */,
 				4DBEA8221F54D95A00C143EF /* AppDelegate.swift */,
 				4DD3D6F51F6CD813005D2C3B /* View Controllers */,
 				4DBEA8261F54D95A00C143EF /* Main.storyboard */,
@@ -98,70 +153,6 @@
 				4DBEA82E1F54D95A00C143EF /* Info.plist */,
 			);
 			path = SKPlayerViewControllerExample;
-			sourceTree = "<group>";
-		};
-		4DD3D6DC1F6CD485005D2C3B /* SKPlayerViewController */ = {
-			isa = PBXGroup;
-			children = (
-				4DD3D6DD1F6CD485005D2C3B /* Assets */,
-				4DD3D6DF1F6CD485005D2C3B /* Delegate */,
-				4DD3D6E11F6CD485005D2C3B /* Overlay View */,
-				4DD3D6E41F6CD485005D2C3B /* Utility */,
-				4DD3D6E71F6CD485005D2C3B /* Video Object */,
-				4DD3D6E91F6CD485005D2C3B /* View Controller */,
-			);
-			path = SKPlayerViewController;
-			sourceTree = "<group>";
-		};
-		4DD3D6DD1F6CD485005D2C3B /* Assets */ = {
-			isa = PBXGroup;
-			children = (
-				4DD3D6DE1F6CD485005D2C3B /* SKAssets.xcassets */,
-			);
-			path = Assets;
-			sourceTree = "<group>";
-		};
-		4DD3D6DF1F6CD485005D2C3B /* Delegate */ = {
-			isa = PBXGroup;
-			children = (
-				4DD3D6E01F6CD485005D2C3B /* SKPlayerViewControllerDelegate.swift */,
-			);
-			path = Delegate;
-			sourceTree = "<group>";
-		};
-		4DD3D6E11F6CD485005D2C3B /* Overlay View */ = {
-			isa = PBXGroup;
-			children = (
-				4DD3D6E21F6CD485005D2C3B /* SKPlayerOverlayView.swift */,
-				4DD3D6E31F6CD485005D2C3B /* SKPlayerOverlayView.xib */,
-			);
-			path = "Overlay View";
-			sourceTree = "<group>";
-		};
-		4DD3D6E41F6CD485005D2C3B /* Utility */ = {
-			isa = PBXGroup;
-			children = (
-				4DD3D6E51F6CD485005D2C3B /* SKExtensions.swift */,
-				4DD3D6E61F6CD485005D2C3B /* SKGlobals.swift */,
-			);
-			path = Utility;
-			sourceTree = "<group>";
-		};
-		4DD3D6E71F6CD485005D2C3B /* Video Object */ = {
-			isa = PBXGroup;
-			children = (
-				4DD3D6E81F6CD485005D2C3B /* SKVideo.swift */,
-			);
-			path = "Video Object";
-			sourceTree = "<group>";
-		};
-		4DD3D6E91F6CD485005D2C3B /* View Controller */ = {
-			isa = PBXGroup;
-			children = (
-				4DD3D6EA1F6CD485005D2C3B /* SKPlayerViewController.swift */,
-				4DD3D6EB1F6CD485005D2C3B /* SKPlayerViewController.xib */,
-			);
-			path = "View Controller";
 			sourceTree = "<group>";
 		};
 		4DD3D6F51F6CD813005D2C3B /* View Controllers */ = {
@@ -247,10 +238,7 @@
 			files = (
 				4D598D2E1F5E05E0007B0DAE /* Assets.xcassets in Resources */,
 				4DBEA82D1F54D95A00C143EF /* LaunchScreen.storyboard in Resources */,
-				4DD3D6EF1F6CD485005D2C3B /* SKPlayerOverlayView.xib in Resources */,
-				4DD3D6EC1F6CD485005D2C3B /* SKAssets.xcassets in Resources */,
 				4DBEA8281F54D95A00C143EF /* Main.storyboard in Resources */,
-				4DD3D6F41F6CD485005D2C3B /* SKPlayerViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -309,14 +297,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4DD3D6F11F6CD485005D2C3B /* SKGlobals.swift in Sources */,
-				4DD3D6F31F6CD485005D2C3B /* SKPlayerViewController.swift in Sources */,
-				4DD3D6EE1F6CD485005D2C3B /* SKPlayerOverlayView.swift in Sources */,
 				4DD3D6F91F6CD838005D2C3B /* PresentedViewController.swift in Sources */,
-				4DD3D6F01F6CD485005D2C3B /* SKExtensions.swift in Sources */,
-				4DD3D6ED1F6CD485005D2C3B /* SKPlayerViewControllerDelegate.swift in Sources */,
 				4DBEA8231F54D95A00C143EF /* AppDelegate.swift in Sources */,
-				4DD3D6F21F6CD485005D2C3B /* SKVideo.swift in Sources */,
 				4DD3D6F71F6CD830005D2C3B /* EmbeddedViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
